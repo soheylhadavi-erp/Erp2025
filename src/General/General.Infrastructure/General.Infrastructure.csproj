@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\General.Application\General.Application.csproj" />
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
     <ProjectReference Include="..\General.Contract\General.Contract.csproj" />
   </ItemGroup>
