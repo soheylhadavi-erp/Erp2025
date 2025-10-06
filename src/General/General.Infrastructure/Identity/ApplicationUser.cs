@@ -4,7 +4,7 @@ using General.Domain.Common;
 
 namespace General.Infrastructure.Identity;
 
-public class ApplicationUser : IdentityUser<Guid>, AuditableIdentityEntity
+public class ApplicationUser : IdentityUser<Guid>//, AuditableIdentityEntity
 {
     public string? FullName { get; set; }
     public string? NationalCode { get; set; }
