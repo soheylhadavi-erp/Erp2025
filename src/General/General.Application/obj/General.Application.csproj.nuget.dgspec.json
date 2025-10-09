@@ -112,7 +112,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj": {
+                "projectPath": "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

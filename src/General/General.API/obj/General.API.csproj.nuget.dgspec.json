@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ErpProject\\src\\General\\General.API\\General.API.csproj": {}
+    "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj": {}
   },
   "projects": {
-    "E:\\ErpProject\\src\\General\\General.API\\General.API.csproj": {
+    "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ErpProject\\src\\General\\General.API\\General.API.csproj",
-        "projectName": "General.API",
-        "projectPath": "E:\\ErpProject\\src\\General\\General.API\\General.API.csproj",
+        "projectUniqueName": "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
+        "projectName": "General.Api",
+        "projectPath": "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
         "packagesPath": "C:\\Users\\Soheyl\\.nuget\\packages\\",
-        "outputPath": "E:\\ErpProject\\src\\General\\General.API\\obj\\",
+        "outputPath": "E:\\ErpProject\\src\\General\\General.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Soheyl\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -200,7 +200,11 @@
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj": {
+                "projectPath": "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj"
+              }
+            }
           }
         },
         "warningProperties": {

@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "NfYeeQHs2HQ=",
+  "dgSpecHash": "f+lULAa4tEo=",
   "success": true,
   "projectFilePath": "E:\\ErpProject\\src\\General\\General.Contract\\General.Contract.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Soheyl\\.nuget\\packages\\fluentvalidation\\12.0.0\\fluentvalidation.12.0.0.nupkg.sha512"
+    "C:\\Users\\Soheyl\\.nuget\\packages\\fluentvalidation\\12.0.0\\fluentvalidation.12.0.0.nupkg.sha512",
+    "C:\\Users\\Soheyl\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

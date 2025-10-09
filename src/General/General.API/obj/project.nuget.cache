@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "y66c3jTRaYw=",
+  "dgSpecHash": "G3Sg2aT/0SI=",
   "success": true,
-  "projectFilePath": "E:\\ErpProject\\src\\General\\General.API\\General.API.csproj",
+  "projectFilePath": "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Soheyl\\.nuget\\packages\\autofac\\8.2.1\\autofac.8.2.1.nupkg.sha512",
     "C:\\Users\\Soheyl\\.nuget\\packages\\autofac.extensions.dependencyinjection\\10.0.0\\autofac.extensions.dependencyinjection.10.0.0.nupkg.sha512",

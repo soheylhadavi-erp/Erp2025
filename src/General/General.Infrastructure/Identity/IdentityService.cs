@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using General.Application.Interfaces;
 
 namespace General.Infrastructure.Identity;
 
-public class IdentityService
+public class IdentityService: IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
