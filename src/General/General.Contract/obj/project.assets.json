@@ -162,19 +162,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Soheyl\\.nuget\\packages\\": {}
+    "C:\\Users\\Soheyl\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\ErpProject\\src\\General\\General.Contract\\General.Contract.csproj",
+      "projectUniqueName": "D:\\ErpProject\\src\\General\\General.Contract\\General.Contract.csproj",
       "projectName": "General.Contract",
-      "projectPath": "E:\\ErpProject\\src\\General\\General.Contract\\General.Contract.csproj",
+      "projectPath": "D:\\ErpProject\\src\\General\\General.Contract\\General.Contract.csproj",
       "packagesPath": "C:\\Users\\Soheyl\\.nuget\\packages\\",
-      "outputPath": "E:\\ErpProject\\src\\General\\General.Contract\\obj\\",
+      "outputPath": "D:\\ErpProject\\src\\General\\General.Contract\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\Soheyl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -188,8 +193,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj": {
-              "projectPath": "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj"
+            "D:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj": {
+              "projectPath": "D:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj"
             }
           }
         }
@@ -203,7 +208,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -230,7 +236,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.317/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

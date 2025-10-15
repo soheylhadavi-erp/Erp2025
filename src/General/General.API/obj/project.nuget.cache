@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "G3Sg2aT/0SI=",
+  "dgSpecHash": "SpYhlzwMpvg=",
   "success": true,
-  "projectFilePath": "E:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
+  "projectFilePath": "D:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Soheyl\\.nuget\\packages\\autofac\\8.2.1\\autofac.8.2.1.nupkg.sha512",
     "C:\\Users\\Soheyl\\.nuget\\packages\\autofac.extensions.dependencyinjection\\10.0.0\\autofac.extensions.dependencyinjection.10.0.0.nupkg.sha512",
@@ -72,9 +72,11 @@
     {
       "code": "NU1608",
       "level": "Warning",
+      "message": "Detected package version outside of dependency constraint: MediatR.Extensions.Microsoft.DependencyInjection 11.1.0 requires MediatR (>= 11.0.0 && < 12.0.0) but version MediatR 13.0.0 was resolved.",
+      "projectPath": "D:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 15.0.1 was resolved.",
-      "libraryId": "AutoMapper",
+      "filePath": "D:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
+      "libraryId": "MediatR",
       "targetGraphs": [
         "net8.0"
       ]
@@ -82,9 +84,11 @@
     {
       "code": "NU1608",
       "level": "Warning",
+      "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 15.0.1 was resolved.",
+      "projectPath": "D:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: MediatR.Extensions.Microsoft.DependencyInjection 11.1.0 requires MediatR (>= 11.0.0 && < 12.0.0) but version MediatR 13.0.0 was resolved.",
-      "libraryId": "MediatR",
+      "filePath": "D:\\ErpProject\\src\\General\\General.Api\\General.Api.csproj",
+      "libraryId": "AutoMapper",
       "targetGraphs": [
         "net8.0"
       ]

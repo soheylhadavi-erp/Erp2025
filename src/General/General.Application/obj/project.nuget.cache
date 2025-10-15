@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EUX8n3d5QgE=",
+  "dgSpecHash": "aA7/vt21P30=",
   "success": true,
-  "projectFilePath": "E:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
+  "projectFilePath": "D:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Soheyl\\.nuget\\packages\\automapper\\15.0.1\\automapper.15.0.1.nupkg.sha512",
     "C:\\Users\\Soheyl\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -26,9 +26,11 @@
     {
       "code": "NU1608",
       "level": "Warning",
+      "message": "Detected package version outside of dependency constraint: MediatR.Extensions.Microsoft.DependencyInjection 11.1.0 requires MediatR (>= 11.0.0 && < 12.0.0) but version MediatR 13.0.0 was resolved.",
+      "projectPath": "D:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 15.0.1 was resolved.",
-      "libraryId": "AutoMapper",
+      "filePath": "D:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
+      "libraryId": "MediatR",
       "targetGraphs": [
         "net8.0"
       ]
@@ -36,9 +38,11 @@
     {
       "code": "NU1608",
       "level": "Warning",
+      "message": "Detected package version outside of dependency constraint: AutoMapper.Extensions.Microsoft.DependencyInjection 12.0.1 requires AutoMapper (= 12.0.1) but version AutoMapper 15.0.1 was resolved.",
+      "projectPath": "D:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
       "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: MediatR.Extensions.Microsoft.DependencyInjection 11.1.0 requires MediatR (>= 11.0.0 && < 12.0.0) but version MediatR 13.0.0 was resolved.",
-      "libraryId": "MediatR",
+      "filePath": "D:\\ErpProject\\src\\General\\General.Application\\General.Application.csproj",
+      "libraryId": "AutoMapper",
       "targetGraphs": [
         "net8.0"
       ]

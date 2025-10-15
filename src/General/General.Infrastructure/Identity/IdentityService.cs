@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using General.Application.Interfaces;
-
+using General.Application.Interfaces.Auth;
 namespace General.Infrastructure.Identity;
 
 public class IdentityService: IIdentityService
@@ -48,5 +48,10 @@ public class IdentityService: IIdentityService
 
         var roles = await _userManager.GetRolesAsync(user);
         return (true, _jwtService.GenerateToken(user.Id, user.Email!, roles), null);
+    }
+
+    public async Task<ApplicationUser?> FindByEmailAsync(string email)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 }

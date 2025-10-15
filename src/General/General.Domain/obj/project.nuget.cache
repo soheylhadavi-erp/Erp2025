@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BYAzjaMm8vA=",
+  "dgSpecHash": "xNz7CW0Gtrw=",
   "success": true,
-  "projectFilePath": "E:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj",
+  "projectFilePath": "D:\\ErpProject\\src\\General\\General.Domain\\General.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Soheyl\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512"
   ],

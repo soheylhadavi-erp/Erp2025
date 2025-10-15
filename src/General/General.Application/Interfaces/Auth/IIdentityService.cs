@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace General.Application.Interfaces
+namespace General.Application.Interfaces.Auth
 {
     public interface IIdentityService
     {
