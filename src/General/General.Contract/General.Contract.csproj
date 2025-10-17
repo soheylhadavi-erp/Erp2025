@@ -14,4 +14,9 @@
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Users\Dtos\" />
+    <Folder Include="Users\Requests\" />
+  </ItemGroup>
+
 </Project>

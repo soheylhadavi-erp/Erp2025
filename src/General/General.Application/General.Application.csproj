@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\common\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
-    <ProjectReference Include="..\General.Contract\General.Contract.csproj" />
+    <ProjectReference Include="..\General.contract\General.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using General.Application.Interfaces;
 using General.Application.Interfaces.Auth;
+using General.Application.Models.Auth;
 namespace General.Infrastructure.Identity;
 
 public class IdentityService: IIdentityService
@@ -20,7 +20,7 @@ public class IdentityService: IIdentityService
         _jwtService = jwtService;
     }
 
-    public async Task<(bool Success, string? Token, string? Error)> RegisterAsync(string email, string password, string fullName)
+    public async Task<AuthResultDto> RegisterAsync(string email, string password, string fullName)
     {
         var user = new ApplicationUser
         {
@@ -36,18 +36,33 @@ public class IdentityService: IIdentityService
         return (true, _jwtService.GenerateToken(user.Id, user.Email!), null);
     }
 
-    public async Task<(bool Success, string? Token, string? Error)> LoginAsync(string email, string password)
+    public async Task<AuthResultDto> LoginAsync(string email, string password)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);
         if (user == null)
-            return (false, null, "User not found");
+            return new AuthResultDto()
+            {
+                Errors = new string[] { "User not found" },
+                Success=false,
+                Token = ""
+            };
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
         if (!result.Succeeded)
-            return (false, null, "Invalid credentials");
+            return new AuthResultDto()
+            {
+                Errors = new string[] { "Invalid credentials" },
+                Success = false,
+                Token = ""
+            };
 
         var roles = await _userManager.GetRolesAsync(user);
-        return (true, _jwtService.GenerateToken(user.Id, user.Email!, roles), null);
+        return new AuthResultDto()
+        {
+            Errors = [],
+            Success = true,
+            Token = _jwtService.GenerateToken(user.Id, user.Email!, roles)
+        };
     }
 
     public async Task<ApplicationUser?> FindByEmailAsync(string email)

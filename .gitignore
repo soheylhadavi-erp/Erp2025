@@ -1,0 +1,11 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs

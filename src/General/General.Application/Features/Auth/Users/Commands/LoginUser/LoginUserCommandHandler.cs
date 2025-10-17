@@ -7,29 +7,33 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using General.Contract.Users;
+using General.Application.Interfaces.Auth;
 
 namespace General.Application.Features.Auth.Commands.LoginUser
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginUserResponse>
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IConfiguration _configuration;
+        //private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IIdentityService _identityService;
+        //private readonly IConfiguration _configuration;
 
-        public LoginUserCommandHandler(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public LoginUserCommandHandler(IIdentityService identityService /*UserManager<ApplicationUser> userManager*/, IConfiguration configuration)
         {
-            _userManager = userManager;
+            //_userManager = userManager;
+            _identityService = identityService;
             _configuration = configuration;
         }
 
         public async Task<LoginUserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return new LoginUserResponse { Success = false, Message = "کاربر یافت نشد." };
+            //var user = await _identityService.LoginAsync(request.Email,request.Password);
+            var result = await _identityService.LoginAsync(request.Email,request.Password);
+            //if (user == null)
+            //    return new LoginUserResponse { Success = false, Message = "کاربر یافت نشد." };
 
-            var passwordCheck = await _userManager.CheckPasswordAsync(user, request.Password);
-            if (!passwordCheck)
-                return new LoginUserResponse { Success = false, Message = "رمز عبور اشتباه است." };
+            //var passwordCheck = await _userManager.CheckPasswordAsync(user, request.Password);
+            //if (!passwordCheck)
+            //    return new LoginUserResponse { Success = false, Message = "رمز عبور اشتباه است." };
 
             // ایجاد توکن JWT
             var tokenHandler = new JwtSecurityTokenHandler();
