@@ -1,6 +1,0 @@
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.csproj.AssemblyReference.cache
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.GeneratedMSBuildEditorConfig.editorconfig
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.AssemblyInfoInputs.cache
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.AssemblyInfo.cs
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.csproj.CoreCompileInputs.cache
-E:\ErpProject\src\General\General.Application\obj\Debug\net8.0\General.Application.sourcelink.json
