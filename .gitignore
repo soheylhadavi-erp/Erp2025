@@ -21,3 +21,4 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 /src/General/.vs/ProjectEvaluation
+/.vs
