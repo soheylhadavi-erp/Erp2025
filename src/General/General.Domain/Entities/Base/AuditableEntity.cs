@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using ErpProject.General.Entities.Base;
 
 namespace General.Domain.Common
 {
@@ -8,11 +9,11 @@ namespace General.Domain.Common
         public Guid? CreatorId { get; set; }
         public Guid? ModifierId { get; set; }
         
-        [ForeignKey(nameof(CreatorId))]
-        public virtual ApplicationUser? Creator { get; set; }
+        //[ForeignKey(nameof(CreatorId))]
+        //public virtual ApplicationUser? Creator { get; set; }
         
-        [ForeignKey(nameof(ModifierId))]
-        public virtual ApplicationUser? Modifier { get; set; }
+        //[ForeignKey(nameof(ModifierId))]
+        //public virtual ApplicationUser? Modifier { get; set; }
 
         public DateTime CreateDateTime { get; set; }
         public DateTime? ModifyDateTime { get; set; }

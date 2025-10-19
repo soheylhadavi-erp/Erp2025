@@ -1,6 +1,5 @@
 // Application/Interfaces/IIdentityService.cs
 using General.Application.Models.Auth;
-using General.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

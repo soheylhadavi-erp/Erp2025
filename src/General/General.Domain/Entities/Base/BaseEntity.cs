@@ -1,4 +1,4 @@
-namespace ErpProject.Common.Domain.Entities
+namespace ErpProject.General.Entities.Base
 {
     public abstract class BaseEntity
     {

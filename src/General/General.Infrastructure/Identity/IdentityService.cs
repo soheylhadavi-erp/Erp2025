@@ -31,9 +31,19 @@ public class IdentityService: IIdentityService
 
         var result = await _userManager.CreateAsync(user, password);
         if (!result.Succeeded)
-            return (false, null, string.Join(", ", result.Errors.Select(e => e.Description)));
+            return new AuthResultDto()
+            {
+                Errors = result.Errors.Select(e => e.Description).ToArray(),
+                Success = false,
+                Token = ""
+            }; 
 
-        return (true, _jwtService.GenerateToken(user.Id, user.Email!), null);
+        return new AuthResultDto()
+        {
+            Errors = [],
+            Success = true,
+            Token = _jwtService.GenerateToken(user.Id, user.Email!)
+        }; 
     }
 
     public async Task<AuthResultDto> LoginAsync(string email, string password)

@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using General.Application.Auth.Commands.RegisterUser;
-using General.Application.Auth.Commands.LoginUser;
-using General.Application.Auth.Queries.GetUserProfile;
+using General.Application.Features.Auth.Commands.RegisterUser;
+using General.Application.Features.Auth.Commands.LoginUser;
+//using General.Application.Features.Auth.Queries.GetUserProfile;
 
 namespace General.API.Controllers
 {
@@ -22,7 +22,7 @@ namespace General.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
             var result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         // POST: api/User/login
@@ -30,7 +30,7 @@ namespace General.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
             var result = await _mediator.Send(command);
-            return result.IsSuccess ? Ok(result) : Unauthorized(result);
+            return result.Success ? Ok(result) : Unauthorized(result);
         }
 
         // GET: api/User/profile/{id}

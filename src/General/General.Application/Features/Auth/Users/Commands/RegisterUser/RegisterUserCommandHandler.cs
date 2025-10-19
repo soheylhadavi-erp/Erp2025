@@ -1,10 +1,9 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using AutoMapper;
-using Domain.Entities;
-using General.Application.Auth.Profiles; // یا مسیر پروفایل
+
 using General.Contract.Users;
 using General.Application.Interfaces.Auth;
+using General.Application.Features.Auth.Commands.RegisterUser;
 
 namespace Application.Features.Auth.Commands.RegisterUser
 {
@@ -13,7 +12,7 @@ namespace Application.Features.Auth.Commands.RegisterUser
         private readonly IMapper _mapper;
         private readonly IIdentityService _identityService;
 
-        public RegisterUserCommandHandler(UserManager<ApplicationUser> userManager, IMapper mapper,IIdentityService identityService)
+        public RegisterUserCommandHandler(IMapper mapper,IIdentityService identityService)
         {
             _mapper = mapper;
             _identityService = identityService;
@@ -21,21 +20,13 @@ namespace Application.Features.Auth.Commands.RegisterUser
 
         public async Task<RegisterUserResponse> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            // بررسی وجود کاربر
-            var existingUser = await _identityService.FindByEmailAsync(request.Email);
-            if (existingUser != null)
-                return new RegisterUserResponse { Success = false, Message = "این ایمیل قبلاً ثبت شده است." };
+            var result = await _identityService.RegisterAsync(request.Email, request.Password,request.FullName);
 
-            // استفاده از AutoMapper برای تبدیل Command به Entity
-            var user = _mapper.Map<ApplicationUser>(request);
-
-            var result = await _identityService.CreateAsync(user, request.Password);
-
-            if (!result.Succeeded)
+            if (!result.Success)
                 return new RegisterUserResponse
                 {
                     Success = false,
-                    Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                    Message = string.Join(", ", result.Errors)
                 };
 
              return new RegisterUserResponse
@@ -44,7 +35,6 @@ namespace Application.Features.Auth.Commands.RegisterUser
                 Message = "ثبت‌ نام با موفقیت انجام شد."
             };
 
-            return response;
         }
     }
 }
