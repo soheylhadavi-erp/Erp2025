@@ -16,7 +16,7 @@ namespace General.Application.Features.Auth.Commands.LoginUser
 
         public async Task<LoginUserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var result = await _identityService.LoginAsync(request.Email,request.Password);
+            var result = await _identityService.LoginAsync(request.Email, request.Password);
             if (!result.Success)
             {
                 return new LoginUserResponse
@@ -30,9 +30,10 @@ namespace General.Application.Features.Auth.Commands.LoginUser
             return new LoginUserResponse
             {
                 Success = true,
-                Token =result.Token,
+                Token = result.Token,
                 Message = "ورود موفقیت‌آمیز بود."
             };
+
         }
     }
 }

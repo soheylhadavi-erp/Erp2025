@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using General.Application.Interfaces.Auth;
 using General.Application.Models.Auth;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 namespace General.Infrastructure.Identity;
 
 public class IdentityService: IIdentityService
@@ -19,7 +20,7 @@ public class IdentityService: IIdentityService
         _signInManager = signInManager;
         _jwtService = jwtService;
     }
-
+    [Authorize]
     public async Task<AuthResultDto> RegisterAsync(string email, string password, string fullName)
     {
         var user = new ApplicationUser
@@ -45,7 +46,7 @@ public class IdentityService: IIdentityService
             Token = _jwtService.GenerateToken(user.Id, user.Email!)
         }; 
     }
-
+    [AllowAnonymous]
     public async Task<AuthResultDto> LoginAsync(string email, string password)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Email == email);

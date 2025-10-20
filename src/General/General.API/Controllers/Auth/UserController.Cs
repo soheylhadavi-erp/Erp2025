@@ -1,7 +1,8 @@
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using General.Application.Features.Auth.Commands.RegisterUser;
 using General.Application.Features.Auth.Commands.LoginUser;
+using Microsoft.AspNetCore.Authorization;
 //using General.Application.Features.Auth.Queries.GetUserProfile;
 
 namespace General.API.Controllers
@@ -17,16 +18,22 @@ namespace General.API.Controllers
             _mediator = mediator;
         }
 
-        // POST: api/User/register
+        /// <summary>
+        /// ثبت نام کاربر جدید
+        /// </summary>
         [HttpPost("register")]
+        [Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
             var result = await _mediator.Send(command);
             return result.Success ? Ok(result) : BadRequest(result);
         }
-
-        // POST: api/User/login
+        /// <summary>
+        /// ورود کاربر به سیستم
+        /// </summary>
         [HttpPost("login")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
             var result = await _mediator.Send(command);
