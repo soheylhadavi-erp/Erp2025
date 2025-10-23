@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using General.Domain.Common;
 
-namespace General.Infrastructure.Identity;
+namespace General.Infrastructure.Identity.Entities;
 
 public class ApplicationUser : IdentityUser<Guid>//, AuditableIdentityEntity
 {

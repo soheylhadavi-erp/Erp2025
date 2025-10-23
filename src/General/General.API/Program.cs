@@ -5,6 +5,8 @@ using General.Application.Interfaces.Auth;
 using General.Contract.Users;
 using General.Infrastructure.Data;
 using General.Infrastructure.Identity;
+using General.Infrastructure.Identity.Entities;
+using General.Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -64,13 +66,22 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSet
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+// خدمات Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
+{
+    // تنظیمات Identity
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IdentityService>();
-
 
 builder.Services.AddAuthentication(options =>
 {

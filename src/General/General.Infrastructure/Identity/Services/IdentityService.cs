@@ -1,9 +1,10 @@
 using General.Application.Interfaces.Auth;
 using General.Application.Models.Auth;
+using General.Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-namespace General.Infrastructure.Identity;
+namespace General.Infrastructure.Identity.Services;
 
 public class IdentityService: IIdentityService
 {

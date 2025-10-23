@@ -22,7 +22,7 @@ namespace General.API.Controllers
         /// ثبت نام کاربر جدید
         /// </summary>
         [HttpPost("register")]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
         {
             var result = await _mediator.Send(command);

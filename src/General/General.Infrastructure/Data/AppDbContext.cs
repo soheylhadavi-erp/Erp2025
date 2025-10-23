@@ -1,4 +1,5 @@
-using General.Infrastructure.Identity;
+using General.Infrastructure.Identity.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,5 +16,17 @@ public class AppDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        // Customize table names AND define primary keys
+        builder.Entity<ApplicationUser>(entity =>
+        {
+            entity.ToTable("Users");
+            entity.HasKey(u => u.Id); // Explicit primary key
+        });
+
+        builder.Entity<ApplicationRole>(entity =>
+        {
+            entity.ToTable("Roles");
+            entity.HasKey(r => r.Id); // Explicit primary key
+        });
     }
 }
