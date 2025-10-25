@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using General.Application.Features.Auth.Commands.LoginUser;
-using General.Application.Features.Auth.Commands.RegisterUser;
-using General.Application.Interfaces.Auth;
-using General.Contract.Users;
+﻿using General.Application.Auth.Permissions.Interfaces;
+using General.Application.Auth.Users.Commands.LoginUser;
+using General.Application.Auth.Users.Interfaces;
+using General.Application.Security.Users.Interfaces;
 using General.Infrastructure.Data;
-using General.Infrastructure.Identity;
-using General.Infrastructure.Identity.Entities;
-using General.Infrastructure.Identity.Services;
+using General.Infrastructure.Security.Entities;
+using General.Infrastructure.Security.Services;
+using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -67,7 +66,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // خدمات Identity
-builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     // تنظیمات Identity
     options.SignIn.RequireConfirmedAccount = false;
@@ -82,6 +81,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IdentityService>();
+builder.Services.AddScoped<IClaimService, ClaimService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -105,6 +106,15 @@ builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
 
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await AppSeeder.SeedAsync(context);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -42,7 +42,8 @@
   <ItemGroup>
     <Folder Include="Data\Configurations\" />
     <Folder Include="Data\Repositories\" />
-    <Folder Include="Identity\Configurations\" />
+    <Folder Include="Features\" />
+    <Folder Include="Security\Configurations\" />
   </ItemGroup>
 
  
