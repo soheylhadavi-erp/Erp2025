@@ -6,10 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace General.Application.Security.Roles.Commands.CreateRole
+namespace General.Application.Security.Roles.Queries.GetRoleById
 {
-    public class CreateRoleCommand : CreateRoleRequest,IRequest<RoleOperationResult>
+    public class GetRoleByIdQuery : GetRoleByIdRequest,IRequest<RoleDto>
     {
-        public int MyProperty { get; set; }
     }
 }

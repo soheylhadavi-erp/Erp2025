@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace General.Application.Security.Roles.Commands.CreateRole
+namespace General.Application.Security.Roles.Commands.AddUserToRole
 {
-    public class CreateRoleCommand : CreateRoleRequest,IRequest<RoleOperationResult>
+    public class AddUserToRoleCommand : AddUserToRoleRequest,IRequest<RoleOperationResult>
     {
-        public int MyProperty { get; set; }
+        
     }
 }

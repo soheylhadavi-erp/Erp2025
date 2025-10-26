@@ -1,10 +1,12 @@
 ﻿using General.Application.Auth.Permissions.Interfaces;
 using General.Application.Auth.Users.Commands.LoginUser;
 using General.Application.Auth.Users.Interfaces;
+using General.Application.Security.Roles.Interfaces;
 using General.Application.Security.Users.Interfaces;
 using General.Infrastructure.Data;
 using General.Infrastructure.Security.Entities;
 using General.Infrastructure.Security.Services;
+using General.Infrastructure.Security.Services.Infrastructure.Identity.Services;
 using Infrastructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -58,8 +60,6 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(LoginUserCommand).Assembly)); // پروژه Application
 //builder.Services.AddAutoMapper(typeof(RegisterUserCommand).Assembly);
 
-builder.Services.AddScoped<IIdentityService, IdentityService>();
-
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -83,6 +83,9 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IdentityService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+
 
 builder.Services.AddAuthentication(options =>
 {

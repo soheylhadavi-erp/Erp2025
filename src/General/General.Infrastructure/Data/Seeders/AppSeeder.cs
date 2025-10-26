@@ -1,5 +1,4 @@
-﻿// Infrastructure/Seeders/AppSeeder.cs
-using General.Infrastructure.Data;
+﻿using General.Infrastructure.Data;
 using General.Infrastructure.Data.Seeders;
 using Microsoft.EntityFrameworkCore;
 
