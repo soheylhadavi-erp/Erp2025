@@ -1,4 +1,4 @@
-﻿namespace Common.Application.Models.Auth
+﻿namespace Common.Application.Models
 {
     public class PageResultDto<T>
     {

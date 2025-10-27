@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace General.Application.Security.Roles.Commands.AddUserToRole
 {
-    public class AddUserToRoleCommand : AddUserToRoleRequest,IRequest<RoleOperationResult>
+    public class AddUserToRoleCommand : IRequest<RoleOperationResult>
     {
-        
+        public Guid RoleId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

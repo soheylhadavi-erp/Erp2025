@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace General.Application.Security.Roles.Models
+namespace General.Application.Security.Roles.Interfaces
 {
-    public class UpdateRoleRequest
+    public class ICreateRoleInput
     {
-        public Guid RoleId { get; set; }
+        public string Name { get; set; }
         public string Description { get; set; }
     }
 }

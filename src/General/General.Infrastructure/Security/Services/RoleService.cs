@@ -1,5 +1,6 @@
 ﻿namespace General.Infrastructure.Security.Services
 {
+    using Common.Application.Models;
     using General.Application.Auth.Users.Models;
     using General.Application.Security.Roles.Interfaces;
     using General.Application.Security.Roles.Models;
@@ -30,15 +31,15 @@
                 _logger = logger;
             }
 
-            public async Task<RoleOperationResult> CreateRoleAsync(CreateRoleRequest request)
+            public async Task<CreateResultDto> CreateRoleAsync(CreateRoleRequestDto request)
             {
                 try
                 {
                     if (string.IsNullOrWhiteSpace(request.Name))
-                        return RoleOperationResult.Failure("Role name cannot be empty");
+                        return CreateResultDto.Failure("Role name cannot be empty");
 
                     if (await _roleManager.RoleExistsAsync(request.Name))
-                        return RoleOperationResult.Failure("Role name already exists");
+                        return CreateResultDto.Failure("Role name already exists");
 
                     var role = new ApplicationRole
                     {
@@ -48,84 +49,84 @@
 
                     var result = await _roleManager.CreateAsync(role);
                     if (!result.Succeeded)
-                        return RoleOperationResult.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return CreateResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
 
                     _logger.LogInformation("Role {RoleName} created successfully", request.Name);
 
                     var roleDto = new RoleDto { Id = role.Id, Name = role.Name, Description = role.Description };
-                    return RoleOperationResult.Success("Role created successfully", roleDto);
+                    return CreateResultDto.Success("Role created successfully");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error creating role {RoleName}", request.Name);
-                    return RoleOperationResult.Failure("Error creating role");
+                    return CreateResultDto.Failure("Error creating role");
                 }
             }
 
-            public async Task<RoleOperationResult> UpdateRoleAsync(UpdateRoleRequest request)
+            public async Task<OperationResultDto> UpdateRoleAsync(Guid RoleId, string Description)
             {
                 try
                 {
-                    var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+                    var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return RoleOperationResult.Failure("Role not found");
+                        return OperationResultDto.Failure("Role not found");
 
                     // جلوگیری از تغییر نقش‌های سیستمی
                     if (IsSystemRole(role.Name))
-                        return RoleOperationResult.Failure("Cannot modify system role");
+                        return OperationResultDto.Failure("Cannot modify system role");
 
-                    if (!string.IsNullOrWhiteSpace(request.Description))
-                        role.Description = request.Description;
+                    if (!string.IsNullOrWhiteSpace(Description))
+                        role.Description = Description;
 
                     var result = await _roleManager.UpdateAsync(role);
                     if (!result.Succeeded)
-                        return RoleOperationResult.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
 
-                    _logger.LogInformation("Role {RoleId} updated successfully", request.RoleId);
-                    return RoleOperationResult.Success("Role updated successfully");
+                    _logger.LogInformation("Role {RoleId} updated successfully", RoleId);
+                    return OperationResultDto.Success("Role updated successfully");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error updating role {RoleId}", request.RoleId);
-                    return RoleOperationResult.Failure("Error updating role");
+                    _logger.LogError(ex, "Error updating role {RoleId}", RoleId);
+                    return OperationResultDto.Failure("Error updating role");
                 }
             }
 
-            public async Task<RoleOperationResult> DeleteRoleAsync(DeleteRoleRequest request)
+            public async Task<OperationResultDto> DeleteRoleAsync(Guid RoleId)
             {
                 try
                 {
-                    var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+                    var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return RoleOperationResult.Failure("Role not found");
+                        return OperationResultDto.Failure("Role not found");
 
                     // جلوگیری از حذف نقش‌های سیستمی
                     if (IsSystemRole(role.Name))
-                        return RoleOperationResult.Failure("Cannot delete system role");
+                        return OperationResultDto.Failure("Cannot delete system role");
 
                     // بررسی اینکه آیا کاربرانی با این نقش وجود دارند
                     var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
                     if (usersInRole.Any())
-                        return RoleOperationResult.Failure("Cannot delete role that has assigned users");
+                        return OperationResultDto.Failure("Cannot delete role that has assigned users");
 
                     var result = await _roleManager.DeleteAsync(role);
                     if (!result.Succeeded)
-                        return RoleOperationResult.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
 
-                    _logger.LogInformation("Role {RoleId} deleted successfully", request.RoleId);
-                    return RoleOperationResult.Success("Role deleted successfully");
+                    _logger.LogInformation("Role {RoleId} deleted successfully", RoleId);
+                    return OperationResultDto.Success("Role deleted successfully");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error deleting role {RoleId}", request.RoleId);
-                    return RoleOperationResult.Failure("Error deleting role");
+                    _logger.LogError(ex, "Error deleting role {RoleId}", RoleId);
+                    return OperationResultDto.Failure("Error deleting role");
                 }
             }
 
-            public async Task<RoleDto?> GetRoleByIdAsync(GetRoleByIdRequest request)
+            public async Task<RoleDto?> GetRoleByIdAsync(Guid RoleId)
             {
                 return await _roleManager.Roles
-                    .Where(r => r.Id == request.RoleId)
+                    .Where(r => r.Id == RoleId)
                     .Select(r => new RoleDto
                     {
                         Id = r.Id,
@@ -147,9 +148,9 @@
                     .ToListAsync();
             }
 
-            public async Task<List<UserDto>> GetUsersInRoleAsync(GetUsersInRoleRequest request)
+            public async Task<List<UserDto>> GetUsersInRoleAsync(Guid RoleId/*, GetUsersInRoleRequestDto request*/)
             {
-                var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+                var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                 if (role == null)
                     return new List<UserDto>();
 
@@ -164,63 +165,63 @@
                 }).ToList();
             }
 
-            public async Task<RoleOperationResult> AddUserToRoleAsync(AddUserToRoleRequest request)
+            public async Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId,Guid UserId)
             {
                 try
                 {
-                    var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+                    var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return RoleOperationResult.Failure("Role not found");
+                        return OperationResultDto.Failure("Role not found");
 
-                    var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+                    var user = await _userManager.FindByIdAsync(UserId.ToString());
                     if (user == null)
-                        return RoleOperationResult.Failure("User not found");
+                        return OperationResultDto.Failure("User not found");
 
                     // بررسی اینکه آیا کاربر از قبل این نقش را دارد
                     if (await _userManager.IsInRoleAsync(user, role.Name))
-                        return RoleOperationResult.Failure("User already has this role");
+                        return OperationResultDto.Failure("User already has this role");
 
                     var result = await _userManager.AddToRoleAsync(user, role.Name);
                     if (!result.Succeeded)
-                        return RoleOperationResult.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
 
-                    _logger.LogInformation("User {UserId} added to role {RoleName}", request.RoleId, role.Name);
-                    return RoleOperationResult.Success("User added to role successfully");
+                    _logger.LogInformation("User {UserId} added to role {RoleName}", RoleId, role.Name);
+                    return OperationResultDto.Success("User added to role successfully");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error adding user {UserId} to role {RoleId}", request.UserId, request.RoleId);
-                    return RoleOperationResult.Failure("Error adding user to role");
+                    _logger.LogError(ex, "Error adding user {UserId} to role {RoleId}", UserId, RoleId);
+                    return OperationResultDto.Failure("Error adding user to role");
                 }
             }
 
-            public async Task<RoleOperationResult> RemoveUserFromRoleAsync(RemoveUserFromRoleRequest request)
+            public async Task<OperationResultDto> RemoveUserFromRoleAsync(Guid RoleId, Guid UserId)
             {
                 try
                 {
-                    var role = await _roleManager.FindByIdAsync(request.RoleId.ToString());
+                    var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return RoleOperationResult.Failure("Role not found");
+                        return OperationResultDto.Failure("Role not found");
 
-                    var user = await _userManager.FindByIdAsync(request.UserId.ToString());
+                    var user = await _userManager.FindByIdAsync(UserId.ToString());
                     if (user == null)
-                        return RoleOperationResult.Failure("User not found");
+                        return OperationResultDto.Failure("User not found");
 
                     // بررسی اینکه آیا کاربر این نقش را دارد
                     if (!await _userManager.IsInRoleAsync(user, role.Name))
-                        return RoleOperationResult.Failure("User does not have this role");
+                        return OperationResultDto.Failure("User does not have this role");
 
                     var result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)
-                        return RoleOperationResult.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
 
-                    _logger.LogInformation("User {UserId} removed from role {RoleName}", request.UserId, role.Name);
-                    return RoleOperationResult.Success("User removed from role successfully");
+                    _logger.LogInformation("User {UserId} removed from role {RoleName}", UserId, role.Name);
+                    return OperationResultDto.Success("User removed from role successfully");
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error removing user {UserId} from role {RoleId}", request.UserId, request.RoleId);
-                    return RoleOperationResult.Failure("Error removing user from role");
+                    _logger.LogError(ex, "Error removing user {UserId} from role {RoleId}", UserId, RoleId);
+                    return OperationResultDto.Failure("Error removing user from role");
                 }
             }
 

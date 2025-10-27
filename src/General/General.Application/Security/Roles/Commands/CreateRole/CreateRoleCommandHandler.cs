@@ -15,13 +15,11 @@ namespace General.Application.Security.Roles.Commands.CreateRole
 
         public async Task<RoleOperationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
-            var createRequest = new CreateRoleRequest
+            return await _roleService.CreateRoleAsync(new CreateRoleRequestDto
             {
-                Name = request.Name,
-                Description = request.Description
-            };
-
-            return await _roleService.CreateRoleAsync(request);//ممکنه مپینگ بخواد
+                Name= request.Name,
+                Description= request.Description,
+            });
         }
     }
 }

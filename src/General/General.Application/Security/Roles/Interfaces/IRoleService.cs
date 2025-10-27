@@ -1,4 +1,5 @@
-﻿using General.Application.Auth.Users.Models;
+﻿using Common.Application.Models;
+using General.Application.Auth.Users.Models;
 using General.Application.Security.Roles.Models;
 
 namespace General.Application.Security.Roles.Interfaces
@@ -6,17 +7,17 @@ namespace General.Application.Security.Roles.Interfaces
     public interface IRoleService
     {
         // مدیریت نقش‌ها
-        Task<RoleOperationResult> CreateRoleAsync(CreateRoleRequest request);
-        Task<RoleOperationResult> UpdateRoleAsync(UpdateRoleRequest request);
-        Task<RoleOperationResult> DeleteRoleAsync(DeleteRoleRequest request);
+        Task<CreateResultDto> CreateRoleAsync(CreateRoleRequestDto request);
+        Task<OperationResultDto> UpdateRoleAsync(Guid RoleId, string Description);
+        Task<OperationResultDto> DeleteRoleAsync(Guid RoleId);
 
         // کوئری‌ها
-        Task<RoleDto?> GetRoleByIdAsync(GetRoleByIdRequest request);
+        Task<RoleDto?> GetRoleByIdAsync(Guid RoleId);
         Task<List<RoleDto>> GetAllRolesAsync();
-        Task<List<UserDto>> GetUsersInRoleAsync(GetUsersInRoleRequest request);
+        Task<List<UserDto>> GetUsersInRoleAsync(Guid RoleId);
 
         // مدیریت کاربران در نقش
-        Task<RoleOperationResult> AddUserToRoleAsync(AddUserToRoleRequest request);
-        Task<RoleOperationResult> RemoveUserFromRoleAsync(RemoveUserFromRoleRequest request);
+        Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId , Guid UserId);
+        Task<OperationResultDto> RemoveUserFromRoleAsync(Guid RoleId, Guid UserId);
     }
 }

@@ -3,8 +3,9 @@ using MediatR;
 
 namespace General.Application.Security.Roles.Commands.DeleteRole
 {
-    public class DeleteRoleCommand : DeleteRoleRequest,IRequest<RoleOperationResult>
+    public class DeleteRoleCommand : IRequest<RoleOperationResult>
     {
+        public Guid RoleId { get; set; }
     }
 
 }

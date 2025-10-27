@@ -1,4 +1,5 @@
-﻿using General.Application.Security.Roles.Models;
+﻿using General.Application.Security.Roles.Interfaces;
+using General.Application.Security.Roles.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,7 @@ using System.Threading.Tasks;
 
 namespace General.Application.Security.Roles.Commands.CreateRole
 {
-    public class CreateRoleCommand : CreateRoleRequest,IRequest<RoleOperationResult>
+    public class CreateRoleCommand : ICreateRoleInput,IRequest<RoleOperationResult>
     {
-        public int MyProperty { get; set; }
     }
 }

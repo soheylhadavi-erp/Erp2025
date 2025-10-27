@@ -3,7 +3,9 @@ using MediatR;
 
 namespace General.Application.Security.Roles.Commands.UpdateRole
 {
-    public class UpdateRoleCommand : UpdateRoleRequest,IRequest<RoleOperationResult>
+    public class UpdateRoleCommand : IRequest<RoleOperationResult>
     {
+        public Guid RoleId { get; set; }
+        public string Description { get; set; }
     }
 }

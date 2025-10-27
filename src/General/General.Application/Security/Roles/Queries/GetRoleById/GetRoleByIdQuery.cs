@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace General.Application.Security.Roles.Queries.GetRoleById
 {
-    public class GetRoleByIdQuery : GetRoleByIdRequest,IRequest<RoleDto>
+    public class GetRoleByIdQuery : IRequest<RoleDto>
     {
+        public Guid RoleId { get; set; }
     }
 }
