@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\common\Common.Contract\Common.Contract.csproj" />
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Roles\" />
     <Folder Include="Users\Dtos\" />
     <Folder Include="Users\Requests\" />
   </ItemGroup>

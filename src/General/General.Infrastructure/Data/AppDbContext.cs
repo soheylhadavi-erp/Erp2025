@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace General.Infrastructure.Data;
 
@@ -34,35 +35,15 @@ public class AppDbContext
             entity.HasKey(r => r.Id); // Explicit primary key
         });
 
-        builder.Entity<RolePermission>(entity =>
-        {
-            entity.HasKey(rp => new { rp.RoleId, rp.PermissionId });
+        builder.Entity<ApplicationRole>()
+        .HasMany(r => r.Permissions)
+        .WithMany(p => p.Roles)
+        .UsingEntity(j => j.ToTable("RolePermissions"));
 
-            entity.HasOne(rp => rp.Role)
-                .WithMany(r => r.RolePermissions)
-                .HasForeignKey(rp => rp.RoleId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(rp => rp.Permission)
-                .WithMany(p => p.RolePermissions)
-                .HasForeignKey(rp => rp.PermissionId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        builder.Entity<UserPermission>(entity =>
-        {
-            entity.HasKey(up => new { up.UserId, up.PermissionId });
-
-            entity.HasOne(up => up.User)
-                .WithMany(u => u.UserPermissions)
-                .HasForeignKey(up => up.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasOne(up => up.Permission)
-                .WithMany(p => p.UserPermissions)
-                .HasForeignKey(up => up.PermissionId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
+        builder.Entity<ApplicationUser>()
+        .HasMany(r => r.Permissions)
+        .WithMany(p => p.Users)
+        .UsingEntity(j => j.ToTable("UserPermissions"));
 
         // Configuration برای PermissionCategory
         builder.Entity<PermissionCategory>(entity =>

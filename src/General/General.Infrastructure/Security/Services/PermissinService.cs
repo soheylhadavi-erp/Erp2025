@@ -70,7 +70,7 @@ namespace General.Infrastructure.Security.Services
         }
 
         public async Task<List<PermissionDto>> GetUserDirectPermissionsAsync(Guid userId)
-        {
+        { 
             return await _context.UserPermissions
                 .Where(up => up.UserId == userId)
                 .Include(up => up.Permission)

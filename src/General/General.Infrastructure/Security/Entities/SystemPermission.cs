@@ -18,12 +18,12 @@ namespace General.Infrastructure.Security.Entities
         [MaxLength(200)]
         public string Description { get; set; } // "مشاهده کاربران"
 
-        // 🔥 تغییر از string به Foreign Key
+        
         public Guid CategoryId { get; set; }
         public virtual PermissionCategory Category { get; set; }
 
         // Navigation Properties
-        public virtual ICollection<RolePermission> RolePermissions { get; set; }
-        public virtual ICollection<UserPermission> UserPermissions { get; set; }
+        public virtual ICollection<ApplicationRole> Roles { get; set; }
+        public virtual ICollection<ApplicationUser> Users { get; set; }
     }
 }

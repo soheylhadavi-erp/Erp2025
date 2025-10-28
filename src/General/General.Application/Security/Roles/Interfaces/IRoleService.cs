@@ -7,7 +7,7 @@ namespace General.Application.Security.Roles.Interfaces
     public interface IRoleService
     {
         // مدیریت نقش‌ها
-        Task<CreateResultDto> CreateRoleAsync(CreateRoleRequestDto request);
+        Task<OperationResultDto<RoleDto>> CreateRoleAsync(CreateRoleRequestDto request);
         Task<OperationResultDto> UpdateRoleAsync(Guid RoleId, string Description);
         Task<OperationResultDto> DeleteRoleAsync(Guid RoleId);
 

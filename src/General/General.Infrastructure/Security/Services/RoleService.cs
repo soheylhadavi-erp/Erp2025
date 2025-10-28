@@ -1,6 +1,7 @@
 ﻿namespace General.Infrastructure.Security.Services
 {
     using Common.Application.Models;
+    using General.Application.Auth.Permissions.Models;
     using General.Application.Auth.Users.Models;
     using General.Application.Security.Roles.Interfaces;
     using General.Application.Security.Roles.Models;
@@ -31,15 +32,15 @@
                 _logger = logger;
             }
 
-            public async Task<CreateResultDto> CreateRoleAsync(CreateRoleRequestDto request)
+            public async Task<OperationResultDto<RoleDto>> CreateRoleAsync(CreateRoleRequestDto request)
             {
                 try
                 {
                     if (string.IsNullOrWhiteSpace(request.Name))
-                        return CreateResultDto.Failure("Role name cannot be empty");
+                        return OperationResultDto<RoleDto>.Failure("Role name cannot be empty");
 
                     if (await _roleManager.RoleExistsAsync(request.Name))
-                        return CreateResultDto.Failure("Role name already exists");
+                        return OperationResultDto<RoleDto>.Failure("Role name already exists");
 
                     var role = new ApplicationRole
                     {
@@ -49,17 +50,17 @@
 
                     var result = await _roleManager.CreateAsync(role);
                     if (!result.Succeeded)
-                        return CreateResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return OperationResultDto<RoleDto>.Failure(result.Errors.Select(e => e.Description).ToList());
 
                     _logger.LogInformation("Role {RoleName} created successfully", request.Name);
 
                     var roleDto = new RoleDto { Id = role.Id, Name = role.Name, Description = role.Description };
-                    return CreateResultDto.Success("Role created successfully");
+                    return OperationResultDto<RoleDto>.Success(roleDto,"Role created successfully");
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error creating role {RoleName}", request.Name);
-                    return CreateResultDto.Failure("Error creating role");
+                    return OperationResultDto<RoleDto>.Failure("Error creating role");
                 }
             }
 
@@ -127,11 +128,22 @@
             {
                 return await _roleManager.Roles
                     .Where(r => r.Id == RoleId)
+                    .Include(x=>x.Permissions).ThenInclude(c=>c.Category)
                     .Select(r => new RoleDto
                     {
                         Id = r.Id,
                         Name = r.Name,
-                        Description = r.Description
+                        Description = r.Description,
+                        Permissions=r.Permissions.Select(p=>new PermissionDto 
+                        {
+                            Id = p.Id,
+                            Name = p.Name,
+                            Description = p.Description,
+                            Category = p.Category.Name,
+                            CategoryId = p.CategoryId,
+                            IsDirect = false,
+                            IsAssigned=true
+                        }).ToList() 
                     })
                     .FirstOrDefaultAsync();
             }
