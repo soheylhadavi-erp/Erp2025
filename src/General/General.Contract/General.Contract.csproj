@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Roles\Delete\" />
     <Folder Include="Users\Dtos\" />
     <Folder Include="Users\Requests\" />
   </ItemGroup>

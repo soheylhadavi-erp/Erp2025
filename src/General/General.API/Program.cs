@@ -1,7 +1,9 @@
 ﻿using General.Application.Auth.Permissions.Interfaces;
 using General.Application.Auth.Users.Commands.LoginUser;
 using General.Application.Auth.Users.Interfaces;
+using General.Application.Security.Roles;
 using General.Application.Security.Roles.Interfaces;
+using General.Application.Security.Users;
 using General.Application.Security.Users.Interfaces;
 using General.Infrastructure.Data;
 using General.Infrastructure.Security.Entities;
@@ -105,7 +107,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key))
     };
 });
-builder.Services.AddAutoMapper(typeof(UserMappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(Profiler).Assembly);
 
 
 var app = builder.Build();

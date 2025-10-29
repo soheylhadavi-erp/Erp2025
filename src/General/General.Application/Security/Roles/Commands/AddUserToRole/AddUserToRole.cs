@@ -1,14 +1,9 @@
-﻿using General.Application.Security.Roles.Models;
+﻿using Common.Contract.Responses;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace General.Application.Security.Roles.Commands.AddUserToRole
+namespace General.Application.Security.Roles
 {
-    public class AddUserToRoleCommand : IRequest<RoleOperationResult>
+    public class AddUserToRoleCommand : IRequest<ApiResponse>
     {
         public Guid RoleId { get; set; }
         public Guid UserId { get; set; }

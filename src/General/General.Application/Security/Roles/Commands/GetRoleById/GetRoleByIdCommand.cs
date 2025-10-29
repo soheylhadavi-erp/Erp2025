@@ -2,9 +2,9 @@
 using General.Application.Security.Roles.Models;
 using MediatR;
 
-namespace General.Application.Security.Roles.Commands.DeleteRole
+namespace General.Application.Security.Roles
 {
-    public class DeleteRoleCommand : IRequest<ApiResponse>
+    public class GetRoleByIdCommand : IRequest<ApiResponse<RoleDto>>
     {
         public Guid RoleId { get; set; }
     }

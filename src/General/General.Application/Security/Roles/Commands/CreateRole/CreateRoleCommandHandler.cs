@@ -1,25 +1,33 @@
-﻿using General.Application.Security.Roles.Interfaces;
+﻿using AutoMapper;
+using Common.Application.Models;
+using Common.Contract.Responses;
+using General.Application.Security.Roles.Interfaces;
 using General.Application.Security.Roles.Models;
+using General.Contract.Roles.Create;
 using MediatR;
 
 namespace General.Application.Security.Roles.Commands.CreateRole
 {
-    public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, RoleOperationResult>
+    public class CreateRoleCommandHandler : IRequestHandler<CreateRoleCommand, ApiResponse<CreateRoleResponse>>
     {
         private readonly IRoleService _roleService;
+        private readonly IMapper _mapper;
 
-        public CreateRoleCommandHandler(IRoleService roleService)
+        public CreateRoleCommandHandler(IRoleService roleService, IMapper mapper)
         {
             _roleService = roleService;
+            _mapper = mapper;
         }
 
-        public async Task<RoleOperationResult> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<CreateRoleResponse>> Handle(CreateRoleCommand request, CancellationToken cancellationToken)
         {
-            return await _roleService.CreateRoleAsync(new CreateRoleRequestDto
+            var result = await _roleService.CreateRoleAsync(new CreateRoleRequestDto
             {
-                Name= request.Name,
-                Description= request.Description,
+                Name = request.Name,
+                Description = request.Description,
             });
+            var response = _mapper.Map<OperationResultDto<RoleDto>, ApiResponse<CreateRoleResponse>>(result);
+            return response;
         }
     }
 }
