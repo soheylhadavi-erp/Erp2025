@@ -1,10 +1,11 @@
 ﻿using Common.Contract.Responses;
-using General.Application.Security.Roles.Models;
+using General.Contract.Roles;
+using General.Contract.Users;
 using MediatR;
 
 namespace General.Application.Security.Roles
 {
-    public class GetRoleByIdCommand : IRequest<ApiResponse<RoleDto>>
+    public class GetUsersInRoleQuery : IRequest<ApiResponse<List<UserResponse>>>
     {
         public Guid RoleId { get; set; }
     }

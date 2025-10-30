@@ -1,4 +1,5 @@
 ﻿using Common.Application.Models;
+using General.Application.Users;
 
 namespace General.Application.Auth.Users.Models
 {

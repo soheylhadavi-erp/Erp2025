@@ -5,7 +5,7 @@ using General.Application.Auth.Permissions.Models;
 using General.Application.Auth.Users.Models;
 using General.Application.Security.Roles.Models;
 using General.Contract.Permissions;
-using General.Contract.Roles.Create;
+using General.Contract.Roles;
 
 namespace General.Application.Security.Roles
 {
@@ -14,11 +14,15 @@ namespace General.Application.Security.Roles
         public Profiler()
         {
             // Roles
-            CreateMap<RoleDto, CreateRoleResponse>();
-            CreateMap<OperationResultDto<RoleDto>, ApiResponse<CreateRoleResponse>>();
+            CreateMap<RoleDto, RoleResponse>();
+            CreateMap<OperationResultDto<RoleDto>, ApiResponse<RoleResponse>>();
             CreateMap<PermissionDto, PermissionResponse>();
 
             CreateMap<OperationResultDto, ApiResponse>();
+            CreateMap<GetPaginatedRolesQuery, PaginatedRequest>();
+            CreateMap<PaginatedResultDto<RoleDto>, PagedResponse<RoleResponse>>();
+
+
         }
     }
 }

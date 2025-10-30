@@ -1,6 +1,6 @@
 ﻿using Common.Application.Models;
-using General.Application.Auth.Users.Models;
 using General.Application.Security.Roles.Models;
+using General.Application.Users;
 
 namespace General.Application.Security.Roles.Interfaces
 {
@@ -13,11 +13,12 @@ namespace General.Application.Security.Roles.Interfaces
 
         // کوئری‌ها
         Task<RoleDto?> GetRoleByIdAsync(Guid RoleId);
-        Task<List<RoleDto>> GetAllRolesAsync();
+        //Task<List<RoleDto>> GetAllRolesAsync();
+        Task<PaginatedResultDto<RoleDto>> GetPaginatedRolesAsync(PaginatedRequest request);
         Task<List<UserDto>> GetUsersInRoleAsync(Guid RoleId);
 
         // مدیریت کاربران در نقش
-        Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId , Guid UserId);
+        Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId, Guid UserId);
         Task<OperationResultDto> RemoveUserFromRoleAsync(Guid RoleId, Guid UserId);
     }
 }

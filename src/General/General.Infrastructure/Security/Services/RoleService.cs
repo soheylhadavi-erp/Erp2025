@@ -5,6 +5,7 @@
     using General.Application.Auth.Users.Models;
     using General.Application.Security.Roles.Interfaces;
     using General.Application.Security.Roles.Models;
+    using General.Application.Users;
     using General.Infrastructure.Data;
     using General.Infrastructure.Security.Entities;
     using Microsoft.AspNetCore.Identity;
@@ -37,10 +38,18 @@
                 try
                 {
                     if (string.IsNullOrWhiteSpace(request.Name))
-                        return OperationResultDto<RoleDto>.Failure("Role name cannot be empty");
+                        return new OperationResultDto<RoleDto>()
+                        {
+                            Succeeded = false,
+                            Errors =new() { "Role name cannot be empty" }
+                        };
 
                     if (await _roleManager.RoleExistsAsync(request.Name))
-                        return OperationResultDto<RoleDto>.Failure("Role name already exists");
+                        return new OperationResultDto<RoleDto>()
+                        {
+                            Succeeded = false,
+                            Errors=new() { "Role name already exists" }
+                        };
 
                     var role = new ApplicationRole
                     {
@@ -50,17 +59,29 @@
 
                     var result = await _roleManager.CreateAsync(role);
                     if (!result.Succeeded)
-                        return OperationResultDto<RoleDto>.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return new OperationResultDto<RoleDto>()
+                        {
+                            Errors = result.Errors.Select(e => e.Description).ToList()
+                        };
 
-                    _logger.LogInformation("Role {RoleName} created successfully", request.Name);
+                    _logger.LogInformation($"Role {request.Name} created successfully", request.Name);
 
                     var roleDto = new RoleDto { Id = role.Id, Name = role.Name, Description = role.Description };
-                    return OperationResultDto<RoleDto>.Success(roleDto,"Role created successfully");
+                    return new OperationResultDto<RoleDto>()
+                    {
+                        Succeeded = true,
+                        Message = "Role created successfully",
+                        Data = roleDto
+                    };
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error creating role {RoleName}", request.Name);
-                    return OperationResultDto<RoleDto>.Failure("Error creating role");
+                    return new OperationResultDto<RoleDto>()
+                    {
+                        Succeeded=false,
+                        Errors=new() { "Error creating role" }
+                    };
                 }
             }
 
@@ -70,26 +91,44 @@
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return OperationResultDto.Failure("Role not found");
-
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "Role not found" }
+                        };
                     // جلوگیری از تغییر نقش‌های سیستمی
                     if (IsSystemRole(role.Name))
-                        return OperationResultDto.Failure("Cannot modify system role");
-
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "Cannot modify system role" }
+                        };
                     if (!string.IsNullOrWhiteSpace(Description))
                         role.Description = Description;
 
                     var result = await _roleManager.UpdateAsync(role);
                     if (!result.Succeeded)
-                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = result.Errors.Select(e => e.Description).ToList()
+                        };
 
-                    _logger.LogInformation("Role {RoleId} updated successfully", RoleId);
-                    return OperationResultDto.Success("Role updated successfully");
+                    _logger.LogInformation($"Role {RoleId} updated successfully", RoleId);
+                    return new OperationResultDto()
+                    {
+                        Succeeded=true,
+                        Message= "Role updated successfully"
+                    };
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error updating role {RoleId}", RoleId);
-                    return OperationResultDto.Failure("Error updating role");
+                    _logger.LogError(ex, $"Error updating role {RoleId}", RoleId);
+                    return new OperationResultDto()
+                    {
+                        Succeeded=false,
+                        Errors=new() { "Error updating role" }
+                    };
                 }
             }
 
@@ -99,28 +138,50 @@
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return OperationResultDto.Failure("Role not found");
+                        return  new OperationResultDto()
+                        {
+                            Succeeded=false,
+                            Errors = new() { "Role not found" }
+                        };
 
                     // جلوگیری از حذف نقش‌های سیستمی
                     if (IsSystemRole(role.Name))
-                        return OperationResultDto.Failure("Cannot delete system role");
-
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "Cannot delete system role" }
+                        };
                     // بررسی اینکه آیا کاربرانی با این نقش وجود دارند
                     var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
                     if (usersInRole.Any())
-                        return OperationResultDto.Failure("Cannot delete role that has assigned users");
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "Cannot delete role that has assigned users" }
+                        };
 
                     var result = await _roleManager.DeleteAsync(role);
                     if (!result.Succeeded)
-                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
-
-                    _logger.LogInformation("Role {RoleId} deleted successfully", RoleId);
-                    return OperationResultDto.Success("Role deleted successfully");
+                        return new OperationResultDto()
+                        { 
+                            Succeeded = false,
+                            Errors = result.Errors.Select(e => e.Description).ToList() 
+                        };
+                    _logger.LogInformation($"Role {RoleId} deleted successfully", RoleId);
+                    return new OperationResultDto()
+                    {
+                        Succeeded=true,
+                        Message= "Role deleted successfully"
+                    };
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error deleting role {RoleId}", RoleId);
-                    return OperationResultDto.Failure("Error deleting role");
+                    return new OperationResultDto()
+                    {
+                        Succeeded = false,
+                        Errors = new() { "Error deleting role" }
+                    };
                 }
             }
 
@@ -148,19 +209,52 @@
                     .FirstOrDefaultAsync();
             }
 
-            public async Task<List<RoleDto>> GetAllRolesAsync()
+            //public async Task<List<RoleDto>> GetAllRolesAsync()
+            //{
+            //    return await _roleManager.Roles
+            //        .Select(r => new RoleDto
+            //        {
+            //            Id = r.Id,
+            //            Name = r.Name,
+            //            Description = r.Description
+            //        })
+            //        .ToListAsync();
+            //}
+
+            public async Task<PaginatedResultDto<RoleDto>> GetPaginatedRolesAsync(PaginatedRequest request)
             {
-                return await _roleManager.Roles
+                // محدودیت صفحه‌بندی
+                var pageSize = Math.Min(request.PageSize, PaginatedRequest.MaxPageSize);
+                var pageNumber = Math.Max(request.PageNumber, 1);
+                var skipRecords = Math.Max(request.SkipRecords, 0); // عدم منفی بودن
+
+                var query = _roleManager.Roles.AsNoTracking();
+
+                var totalCount = await query.CountAsync();
+
+                var items = await query
                     .Select(r => new RoleDto
                     {
                         Id = r.Id,
                         Name = r.Name,
                         Description = r.Description
                     })
+                    .Skip(skipRecords) // اول SkipRecords رو رد کن
+                    .Skip((pageNumber - 1) * pageSize) // سپس صفحه‌بندی کن
+                    .Take(pageSize)
                     .ToListAsync();
+
+                return new PaginatedResultDto<RoleDto>
+                {
+                    Items = items,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                    SkippedRecords = skipRecords
+                };
             }
 
-            public async Task<List<UserDto>> GetUsersInRoleAsync(Guid RoleId/*, GetUsersInRoleRequestDto request*/)
+            public async Task<List<UserDto>> GetUsersInRoleAsync(Guid RoleId)
             {
                 var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                 if (role == null)
@@ -183,27 +277,47 @@
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return OperationResultDto.Failure("Role not found");
+                        return new() {Succeeded=false,Errors=new() { "Role not found" } };
 
                     var user = await _userManager.FindByIdAsync(UserId.ToString());
                     if (user == null)
-                        return OperationResultDto.Failure("User not found");
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "User not found" }
+                        };
 
                     // بررسی اینکه آیا کاربر از قبل این نقش را دارد
                     if (await _userManager.IsInRoleAsync(user, role.Name))
-                        return OperationResultDto.Failure("User already has this role");
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "User already has this role" }
+                        };
 
                     var result = await _userManager.AddToRoleAsync(user, role.Name);
                     if (!result.Succeeded)
-                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = result.Errors.Select(e => e.Description).ToList()
+                        };
 
-                    _logger.LogInformation("User {UserId} added to role {RoleName}", RoleId, role.Name);
-                    return OperationResultDto.Success("User added to role successfully");
+                    _logger.LogInformation("User {UserId} added to role {role.Name}", RoleId, role.Name);
+                    return new OperationResultDto()
+                    {
+                        Succeeded = true,
+                        Errors = new() { "User added to role successfully" }
+                    };
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error adding user {UserId} to role {RoleId}", UserId, RoleId);
-                    return OperationResultDto.Failure("Error adding user to role");
+                    return new OperationResultDto()
+                    {
+                        Succeeded = false,
+                        Errors = new() { "Error adding user to role" }
+                    };
                 }
             }
 
@@ -213,27 +327,50 @@
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return OperationResultDto.Failure("Role not found");
-
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "Role not found" }
+                        };
                     var user = await _userManager.FindByIdAsync(UserId.ToString());
                     if (user == null)
-                        return OperationResultDto.Failure("User not found");
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = new() { "User not found" }
+                        };
 
                     // بررسی اینکه آیا کاربر این نقش را دارد
                     if (!await _userManager.IsInRoleAsync(user, role.Name))
-                        return OperationResultDto.Failure("User does not have this role");
+                        return new OperationResultDto()
+                        {
+                            Succeeded=false,
+                            Errors = new() { "User does not have this role" }
+                        };
 
                     var result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)
-                        return OperationResultDto.Failure(result.Errors.Select(e => e.Description).ToList());
+                        return new OperationResultDto()
+                        {
+                            Succeeded = false,
+                            Errors = result.Errors.Select(e => e.Description).ToList()
+                        };
 
                     _logger.LogInformation("User {UserId} removed from role {RoleName}", UserId, role.Name);
-                    return OperationResultDto.Success("User removed from role successfully");
+                    return new OperationResultDto()
+                    {
+                        Succeeded = true,
+                        Message = "User removed from role successfully"
+                    };
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error removing user {UserId} from role {RoleId}", UserId, RoleId);
-                    return OperationResultDto.Failure("Error removing user from role");
+                    return new OperationResultDto()
+                    {
+                        Succeeded = false,
+                        Errors = new() { "Error removing user from role" }
+                    };
                 }
             }
 

@@ -34,20 +34,30 @@ namespace General.Infrastructure.Security.Services
                 var user = await _userManager.FindByIdAsync(userId.ToString());
                 if (user == null) return false;
 
-                // Checking user permissions directly
-                var hasDirectPermission = await _context.UserPermissions
-                    .Include(up => up.Permission)
-                    .AnyAsync(up => up.UserId == userId && up.Permission.Name == permissionName);
+                //Checking user permissions directly
+                //var hasDirectPermission = await _context.UserPermissions
+                //    .Include(up => up.Permission)
+                //    .AnyAsync(up => up.UserId == userId && up.Permission.Name == permissionName);
+
+                var hasDirectPermission = await _context.Users
+                    .Where(u=>u.Id==userId)
+                   .SelectMany(u => u.Permissions)
+                   .AnyAsync(p => p.Name ==permissionName);
 
                 if (hasDirectPermission) return true;
 
                 // Checking permissions through roles
 
                 var userRoles = await _userManager.GetRolesAsync(user);
-                var hasRolePermission = await _context.RolePermissions
-                    .Include(rp => rp.Role)
-                    .Include(rp => rp.Permission)
-                    .AnyAsync(rp => userRoles.Contains(rp.Role.Name) && rp.Permission.Name == permissionName);
+                //var hasRolePermission = await _context.RolePermissions
+                //    .Include(rp => rp.Role)
+                //    .Include(rp => rp.Permission)
+                //    .AnyAsync(rp => userRoles.Contains(rp.Role.Name) && rp.Permission.Name == permissionName);
+
+                var hasRolePermission = await _context.Roles
+                   .Where(r=>userRoles.Contains(r.Name))
+                   .SelectMany(r => r.Permissions)
+                   .AnyAsync(p => p.Name == permissionName);
 
                 return hasRolePermission;
             }
@@ -70,18 +80,32 @@ namespace General.Infrastructure.Security.Services
         }
 
         public async Task<List<PermissionDto>> GetUserDirectPermissionsAsync(Guid userId)
-        { 
-            return await _context.UserPermissions
-                .Where(up => up.UserId == userId)
-                .Include(up => up.Permission)
-                .ThenInclude(p => p.Category)
+        {
+            //return await _context.UserPermissions
+            //    .Where(up => up.UserId == userId)
+            //    .Include(up => up.Permission)
+            //    .ThenInclude(p => p.Category)
+            //    .Select(up => new PermissionDto
+            //    {
+            //        Id = up.Permission.Id,
+            //        Name = up.Permission.Name,
+            //        Description = up.Permission.Description,
+            //        Category = up.Permission.Category.Name,
+            //        CategoryId = up.Permission.CategoryId,
+            //        IsDirect = true
+            //    })
+            //    .ToListAsync();
+
+            return await _context.Users
+                .Where(up => up.Id == userId)
+                .SelectMany(up => up.Permissions)
                 .Select(up => new PermissionDto
                 {
-                    Id = up.Permission.Id,
-                    Name = up.Permission.Name,
-                    Description = up.Permission.Description,
-                    Category = up.Permission.Category.Name,
-                    CategoryId = up.Permission.CategoryId,
+                    Id = up.Id,
+                    Name = up.Name,
+                    Description = up.Description,
+                    Category = up.Category.Name,
+                    CategoryId = up.CategoryId,
                     IsDirect = true
                 })
                 .ToListAsync();
@@ -126,20 +150,27 @@ namespace General.Infrastructure.Security.Services
                     return AssignPermissionResult.Failure("Permission not found");
 
                 // Check for non-duplicates
-                var existingPermission = await _context.UserPermissions
-                    .FirstOrDefaultAsync(up => up.UserId == userId && up.PermissionId == permissionId);
+                //var existingPermission = await _context.UserPermissions
+                //    .FirstOrDefaultAsync(up => up.UserId == userId && up.PermissionId == permissionId);
+
+                var existingPermission = await _context.Users
+                    .Where(u => u.Id == userId)
+                    .SelectMany(u=>u.Permissions)
+                    .FirstOrDefaultAsync(up => up.Id == permissionId);
+
 
                 if (existingPermission != null)
                     return AssignPermissionResult.Failure("Permission already assigned to user");
 
                 // Permission assignment
-                var userPermission = new UserPermission
-                {
-                    UserId = userId,
-                    PermissionId = permissionId
-                };
+                //var userPermission = new UserPermission
+                //{
+                //    UserId = userId,
+                //    PermissionId = permissionId
+                //};
 
-                _context.UserPermissions.Add(userPermission);
+                user.Permissions.Add(permission);
+                //_context.UserPermissions.Add(userPermission);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Permission {PermissionId} assigned to user {UserId}", permissionId, userId);
@@ -156,13 +187,21 @@ namespace General.Infrastructure.Security.Services
         {
             try
             {
-                var userPermission = await _context.UserPermissions
-                    .FirstOrDefaultAsync(up => up.UserId == userId && up.PermissionId == permissionId);
+                //var userPermission = await _context.UserPermissions
+                //    .FirstOrDefaultAsync(up => up.UserId == userId && up.PermissionId == permissionId);
 
-                if (userPermission == null)
+                var permission = await _context.Users
+                    .Where(u=>u.Id==userId)
+                    .SelectMany(u=>u.Permissions)
+                    .FirstOrDefaultAsync(p=>p.Id == permissionId);
+
+                if (permission == null)
                     return AssignPermissionResult.Failure("Permission not assigned to user");
 
-                _context.UserPermissions.Remove(userPermission);
+                //_context.UserPermissions.Remove(userPermission);
+                var user = await _context.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
+                user.Permissions.Remove(permission);
+                
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Permission {PermissionId} removed from user {UserId}", permissionId, userId);
@@ -205,7 +244,7 @@ namespace General.Infrastructure.Security.Services
         {
             try
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await _context.Roles.FindAsync(roleId);
                 if (role == null)
                     return AssignPermissionResult.Failure("Role not found");
 
@@ -213,19 +252,12 @@ namespace General.Infrastructure.Security.Services
                 if (permission == null)
                     return AssignPermissionResult.Failure("Permission not found");
 
-                var existingPermission = await _context.RolePermissions
-                    .FirstOrDefaultAsync(rp => rp.RoleId == roleId && rp.PermissionId == permissionId);
+                var hasPermission = await _context.Roles.Include(x => x.Permissions).
+                    Where(x => x.Id == roleId).SelectMany(x => x.Permissions).AnyAsync(p=>p.Id==permissionId);
 
-                if (existingPermission != null)
+                if (hasPermission)
                     return AssignPermissionResult.Failure("Permission already assigned to role");
-
-                var rolePermission = new RolePermission
-                {
-                    RoleId = roleId,
-                    PermissionId = permissionId
-                };
-
-                _context.RolePermissions.Add(rolePermission);
+                role.Permissions.Add(permission);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Permission {PermissionId} assigned to role {roleId}", permissionId, roleId);

@@ -15,8 +15,8 @@ public class AppDbContext
     }
 
     public DbSet<SystemPermission> SystemPermissions { get; set; }
-    public DbSet<RolePermission> RolePermissions { get; set; }
-    public DbSet<UserPermission> UserPermissions { get; set; }
+    //public DbSet<RolePermission> RolePermissions { get; set; }
+    //public DbSet<UserPermission> UserPermissions { get; set; }
     public DbSet<PermissionCategory> PermissionCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
