@@ -22,9 +22,14 @@ namespace General.Application.Security.Roles
         {
             var result = await _roleService.GetRoleByIdAsync(request.RoleId);
             var role = _mapper.Map<RoleDto, RoleResponse>(result);
-            var response= new ApiResponse<RoleResponse>()
-            { Succeeded=true,Message="Role Received Successfully ",Data=role };
-            return response;
+            if (role!=null)
+            {
+                return new ApiResponse<RoleResponse>()
+                { Succeeded = true, Message = "Role Received Successfully", Data = role };
+            }
+
+            return new ApiResponse<RoleResponse>()
+                { Succeeded = false, Message = "Role Not Found", Data = null };
         }
     }
 }

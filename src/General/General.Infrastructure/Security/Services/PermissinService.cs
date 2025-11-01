@@ -118,17 +118,33 @@ namespace General.Infrastructure.Security.Services
 
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            return await _context.RolePermissions
-                .Where(rp => userRoles.Contains(rp.Role.Name))
-                .Include(rp => rp.Permission)
-                .ThenInclude(p => p.Category)
-                .Select(rp => new PermissionDto
+            //return await _context.RolePermissions
+            //    .Where(rp => userRoles.Contains(rp.Role.Name))
+            //    .Include(rp => rp.Permission)
+            //    .ThenInclude(p => p.Category)
+            //    .Select(rp => new PermissionDto
+            //    {
+            //        Id = rp.Permission.Id,
+            //        Name = rp.Permission.Name,
+            //        Description = rp.Permission.Description,
+            //        Category = rp.Permission.Category.Name,
+            //        CategoryId = rp.Permission.CategoryId,
+            //        IsDirect = false
+            //    })
+            //    .Distinct()
+            //    .ToListAsync();
+
+            return await _context.Roles
+                .Where(r => userRoles.Contains(r.Name))
+                .SelectMany(r => r.Permissions)
+                .Include(p => p.Category)
+                .Select(p => new PermissionDto
                 {
-                    Id = rp.Permission.Id,
-                    Name = rp.Permission.Name,
-                    Description = rp.Permission.Description,
-                    Category = rp.Permission.Category.Name,
-                    CategoryId = rp.Permission.CategoryId,
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Category = p.Category.Name,
+                    CategoryId = p.CategoryId,
                     IsDirect = false
                 })
                 .Distinct()
@@ -217,25 +233,42 @@ namespace General.Infrastructure.Security.Services
         // Role
         public async Task<bool> RoleHasPermissionAsync(Guid roleId, string permissionName)
         {
-            return await _context.RolePermissions
-                .Include(rp => rp.Role)
-                .Include(rp => rp.Permission)
-                .AnyAsync(rp => rp.RoleId == roleId && rp.Permission.Name == permissionName);
+            //return await _context.RolePermissions
+            //    .Include(rp => rp.Role)
+            //    .Include(rp => rp.Permission)
+            //    .AnyAsync(rp => rp.RoleId == roleId && rp.Permission.Name == permissionName);
+            return await _context.Roles
+                .Where(r=>r.Id==roleId)
+                .SelectMany(r=>r.Permissions)
+                .AnyAsync(p =>p.Name == permissionName);
         }
 
         public async Task<List<PermissionDto>> GetRolePermissionsAsync(Guid roleId)
         {
-            return await _context.RolePermissions
-                .Where(rp => rp.RoleId == roleId)
-                .Include(rp => rp.Permission)
-                .ThenInclude(p => p.Category)
-                .Select(rp => new PermissionDto
+            //return await _context.RolePermissions
+            //    .Where(rp => rp.RoleId == roleId)
+            //    .Include(rp => rp.Permission)
+            //    .ThenInclude(p => p.Category)
+            //    .Select(rp => new PermissionDto
+            //    {
+            //        Id = rp.Permission.Id,
+            //        Name = rp.Permission.Name,
+            //        Description = rp.Permission.Description,
+            //        Category = rp.Permission.Category.Name,
+            //        CategoryId = rp.Permission.CategoryId
+            //    })
+            //    .ToListAsync();
+            return await _context.Roles
+                .Where(r => r.Id == roleId)
+                .SelectMany(r=>r.Permissions)
+                .Include(p => p.Category)
+                .Select(p => new PermissionDto
                 {
-                    Id = rp.Permission.Id,
-                    Name = rp.Permission.Name,
-                    Description = rp.Permission.Description,
-                    Category = rp.Permission.Category.Name,
-                    CategoryId = rp.Permission.CategoryId
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Category = p.Category.Name,
+                    CategoryId = p.CategoryId
                 })
                 .ToListAsync();
         }
@@ -274,7 +307,7 @@ namespace General.Infrastructure.Security.Services
         {
             try
             {
-                var role = await _roleManager.FindByIdAsync(roleId.ToString());
+                var role = await _context.Roles.Include(x=>x.Permissions).Where(x=>x.Id==roleId).FirstOrDefaultAsync();
                 if (role == null)
                     return AssignPermissionResult.Failure("Role not found");
 
@@ -289,20 +322,33 @@ namespace General.Infrastructure.Security.Services
                     return AssignPermissionResult.Failure($"Invalid permission IDs: {string.Join(", ", invalidPermissions)}");
 
                 // Remove current permissions
-                var currentPermissions = await _context.RolePermissions
-                    .Where(rp => rp.RoleId == roleId)
-                    .ToListAsync();
 
-                _context.RolePermissions.RemoveRange(currentPermissions);
+                //var currentPermissions = await _context.RolePermissions
+                //    .Where(rp => rp.RoleId == roleId)
+                //    .ToListAsync();
+
+                //_context.RolePermissions.RemoveRange(currentPermissions);
+
+                var currentPermissions = await _context.Roles
+                   .Where(r => r.Id == roleId)
+                   .SelectMany(r=>r.Permissions)
+                   .ToListAsync();
+
+                role.Permissions.RemoveAll(currentPermissions);
 
                 // Adding new permissions
+                //foreach (var permissionId in permissionIds)
+                //{
+                //    _context.RolePermissions.Add(new RolePermission
+                //    {
+                //        RoleId = roleId,
+                //        PermissionId = permissionId
+                //    });
+                //}
                 foreach (var permissionId in permissionIds)
                 {
-                    _context.RolePermissions.Add(new RolePermission
-                    {
-                        RoleId = roleId,
-                        PermissionId = permissionId
-                    });
+                    var permission =await _context.SystemPermissions.FindAsync(permissionId);
+                    role.Permissions.Add(permission);
                 }
 
                 await _context.SaveChangesAsync();
@@ -321,13 +367,18 @@ namespace General.Infrastructure.Security.Services
         {
             try
             {
-                var rolePermission = await _context.RolePermissions
-                    .FirstOrDefaultAsync(rp => rp.RoleId == roleId && rp.PermissionId == permissionId);
+                //var rolePermission = await _context.RolePermissions
+                //    .FirstOrDefaultAsync(rp => rp.RoleId == roleId && rp.PermissionId == permissionId);
+
+                var role = await _context.Roles.Include(x => x.Permissions).Where(x => x.Id == roleId).FirstOrDefaultAsync();
+
+                var rolePermission =role.Permissions.Where(p => p.Id == permissionId).FirstOrDefault();
+
 
                 if (rolePermission == null)
                     return AssignPermissionResult.Failure("Permission not assigned to role");
 
-                _context.RolePermissions.Remove(rolePermission);
+                role.Permissions.Remove(rolePermission);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation($"Permission {permissionId} removed from role {roleId}", permissionId, roleId);

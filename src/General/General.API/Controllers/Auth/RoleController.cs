@@ -24,7 +24,7 @@ namespace General.Api.Controllers
         /// <summary>
         /// دریافت لیست صفحه‌بندی شده نقش‌ها
         /// </summary>
-        [HttpGet]
+        [HttpGet("paginated-roles-list")]
         public async Task<ActionResult<ApiResponse<PagedResponse<RoleResponse>>>> GetRoles(
             [FromQuery] GetPaginatedRolesQuery query)
         {
@@ -46,13 +46,13 @@ namespace General.Api.Controllers
         /// <summary>
         /// ایجاد نقش جدید
         /// </summary>
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<ApiResponse<RoleResponse>>> CreateRole([FromBody] CreateRoleCommand command)
         {
             var result = await _mediator.Send(command);
 
             if (result.Succeeded && result.Data != null)
-                return CreatedAtAction(nameof(GetRoleById), new { id = result.Data.Id }, result);
+                return Ok(result);
 
             return BadRequest(result);
         }
