@@ -3,7 +3,6 @@ using General.Application.Auth.Users.Commands.LoginUser;
 using General.Application.Auth.Users.Interfaces;
 using General.Application.Security.Roles;
 using General.Application.Security.Roles.Interfaces;
-using General.Application.Security.Users;
 using General.Application.Security.Users.Interfaces;
 using General.Infrastructure.Data;
 using General.Infrastructure.Security.Entities;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Common.Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -134,6 +134,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<CurrentUserMiddleware>();
 
 app.MapControllers();
 

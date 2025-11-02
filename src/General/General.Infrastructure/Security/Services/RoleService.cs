@@ -56,7 +56,6 @@
                         Name = request.Name,
                         Description = request.Description
                     };
-
                     var result = await _roleManager.CreateAsync(role);
                     if (!result.Succeeded)
                         return new OperationResultDto<RoleDto>()

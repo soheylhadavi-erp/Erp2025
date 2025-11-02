@@ -43,7 +43,7 @@
     <Folder Include="Data\Configurations\" />
     <Folder Include="Data\Repositories\" />
     <Folder Include="Features\" />
-    <Folder Include="Security\Configurations\" />
+    <Folder Include="Features\Configurations\" />
   </ItemGroup>
 
  

@@ -1,6 +1,12 @@
-namespace ErpProject.General.Entities.Base
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Common.Domain.Interfaces.Base
 {
-    public abstract class AuditableEntity : BaseEntity
+    public interface IAudit
     {
         public Guid? CreatorId { get; set; }
         public Guid? ModifierId { get; set; }
@@ -14,7 +20,7 @@ namespace ErpProject.General.Entities.Base
         public DateTime CreateDateTime { get; set; }
         public DateTime? ModifyDateTime { get; set; }
         public Guid? DeleteById { get; set; }
-        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
+        public string ConcurrencyStamp { get; set; }/* { get; set; } = Guid.NewGuid().ToString();*/
         public Guid? TenantId { get; set; }
     }
 }

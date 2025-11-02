@@ -1,4 +1,3 @@
-using General.Domain.Common;
 using Microsoft.AspNetCore.Identity;
 
 namespace General.Infrastructure.Security.Entities;
