@@ -8,7 +8,8 @@ namespace Common.Domain.Entities.Base
         public Guid? ModifierId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime? ModifyDateTime { get; set; }
-        public Guid? DeleteById { get; set; }
+        public Guid? DeletedById { get; set; }
+        public DateTime? DeleteDateTime{ get; set; }
         public string ConcurrencyStamp { get; set; }= Guid.NewGuid().ToString();
         public Guid? TenantId { get; set; }
     }

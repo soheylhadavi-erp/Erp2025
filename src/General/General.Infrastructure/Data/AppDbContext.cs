@@ -1,4 +1,6 @@
-﻿using General.Infrastructure.Security.Entities;
+﻿using Common.Application.Utilities;
+using Common.Domain.Interfaces.Base;
+using General.Infrastructure.Security.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -77,5 +79,36 @@ public class AppDbContext
                 .HasForeignKey(sp => sp.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entries = ChangeTracker.Entries<IAudit>();
+
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreateDateTime = DateTime.UtcNow;
+                entry.Entity.CreatorId = CurrentUser.UserId != null ? Guid.Parse(CurrentUser.UserId) : null;
+                entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                if (entry.Entity is ISoftDelete softDeleteEntity && softDeleteEntity.IsDeleted)
+                {
+                    entry.Entity.DeleteDateTime = DateTime.UtcNow;
+                    entry.Entity.DeletedById = Guid.Parse(CurrentUser.UserId);
+                }
+                else
+                {
+                    entry.Entity.ModifyDateTime = DateTime.UtcNow;
+                    entry.Entity.ModifierId = Guid.Parse(CurrentUser.UserId);
+                }
+                entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

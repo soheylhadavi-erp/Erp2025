@@ -119,7 +119,7 @@ if (app.Environment.IsDevelopment())
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>();
         await context.Database.EnsureCreatedAsync();
-        await AppSeeder.SeedAsync(context,logger);
+        await AppSeeder.SeedAsync(context, scope.ServiceProvider, logger);
     }
 }
 
