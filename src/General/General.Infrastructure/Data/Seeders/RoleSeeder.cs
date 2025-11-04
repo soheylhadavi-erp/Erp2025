@@ -43,6 +43,7 @@ namespace General.Infrastructure.Data.Seeders
             },
             new ApplicationRole
             {
+                NormalizedName="ADMIN",
                 Name = "Admin",
                 Description = "دسترسی مدیریتی به سیستم",
                 //IsActive = true,

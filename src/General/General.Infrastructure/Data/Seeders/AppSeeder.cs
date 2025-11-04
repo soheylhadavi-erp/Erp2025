@@ -7,13 +7,13 @@ public static class AppSeeder
 {
     public static async Task SeedAsync(AppDbContext context,IServiceProvider serviceProvider,ILoggerFactory loggerFactory)
     {
-        if (!await context.SystemPermissions.AnyAsync())
-        {
+        //if (!await context.SystemPermissions.AnyAsync())
+        //{
             await PermissionCategorySeeder.SeedPermissionCategoriesAsync(context);
             await PermissionSeeder.SeedPermissionsAsync(context);
             await new RoleSeeder(context, loggerFactory).SeedRolesAsync();
             await UserSeeder.SeedUsersAsync(serviceProvider);
 
-        }
+        //}
     }
 }

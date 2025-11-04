@@ -22,17 +22,17 @@ public class IdentityService: IIdentityService
         _jwtService = jwtService;
     }
     [Authorize]//RegisterUser
-    public async Task<AuthResultDto> RegisterAsync(string email, string password,string confirmPassword, string fullName)
+    public async Task<AuthResultDto> RegisterAsync(string email, string password,/*string confirmPassword,*/ string fullName)
     {
-        if (password!=confirmPassword)
-        {
-            return new AuthResultDto()
-            {
-                Errors = ["ConfirmPassword does not match with password"] ,
-                Success = false,
-                Token = null
-            };
-        }
+        //if (password!=confirmPassword)
+        //{
+        //    return new AuthResultDto()
+        //    {
+        //        Errors = ["ConfirmPassword does not match with password"] ,
+        //        Success = false,
+        //        Token = null
+        //    };
+        //}
         var user = new ApplicationUser
         {
             UserName = email,

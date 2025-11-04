@@ -27,13 +27,13 @@ public class AppDbContext
         // Customize table names AND define primary keys
         builder.Entity<ApplicationUser>(entity =>
         {
-            entity.ToTable("Users");
+            //entity.ToTable("Users");
             entity.HasKey(u => u.Id); // Explicit primary key
         });
 
         builder.Entity<ApplicationRole>(entity =>
         {
-            entity.ToTable("Roles");
+            //entity.ToTable("Roles");
             entity.HasKey(r => r.Id); // Explicit primary key
         });
 
@@ -81,34 +81,34 @@ public class AppDbContext
         });
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        var entries = ChangeTracker.Entries<IAudit>();
+    //public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    //{
+    //    var entries = ChangeTracker.Entries<IAudit>();
 
-        foreach (var entry in entries)
-        {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreateDateTime = DateTime.UtcNow;
-                entry.Entity.CreatorId = CurrentUser.UserId != null ? Guid.Parse(CurrentUser.UserId) : null;
-                entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
-            }
-            else if (entry.State == EntityState.Modified)
-            {
-                if (entry.Entity is ISoftDelete softDeleteEntity && softDeleteEntity.IsDeleted)
-                {
-                    entry.Entity.DeleteDateTime = DateTime.UtcNow;
-                    entry.Entity.DeletedById = Guid.Parse(CurrentUser.UserId);
-                }
-                else
-                {
-                    entry.Entity.ModifyDateTime = DateTime.UtcNow;
-                    entry.Entity.ModifierId = Guid.Parse(CurrentUser.UserId);
-                }
-                entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
-            }
-        }
+    //    foreach (var entry in entries)
+    //    {
+    //        if (entry.State == EntityState.Added)
+    //        {
+    //            entry.Entity.CreateDateTime = DateTime.UtcNow;
+    //            entry.Entity.CreatorId = CurrentUser.UserId != null ? Guid.Parse(CurrentUser.UserId) : null;
+    //            entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+    //        }
+    //        else if (entry.State == EntityState.Modified)
+    //        {
+    //            if (entry.Entity is ISoftDelete softDeleteEntity && softDeleteEntity.IsDeleted)
+    //            {
+    //                entry.Entity.DeleteDateTime = DateTime.UtcNow;
+    //                entry.Entity.DeletedById = Guid.Parse(CurrentUser.UserId);
+    //            }
+    //            else
+    //            {
+    //                entry.Entity.ModifyDateTime = DateTime.UtcNow;
+    //                entry.Entity.ModifierId = Guid.Parse(CurrentUser.UserId);
+    //            }
+    //            entry.Entity.ConcurrencyStamp = Guid.NewGuid().ToString();
+    //        }
+    //    }
 
-        return await base.SaveChangesAsync(cancellationToken);
-    }
+    //    return await base.SaveChangesAsync(cancellationToken);
+    //}
 }

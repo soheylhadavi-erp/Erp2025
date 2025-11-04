@@ -378,6 +378,12 @@
                 var systemRoles = new[] { "SuperAdmin", "Admin", "User" };
                 return systemRoles.Contains(roleName);
             }
+
+            public async Task<bool> RoleExistByName(string name)
+            {
+                return await _roleManager.Roles.Where(x => x.Name == name)
+                   .AnyAsync();
+            }
         }
     }
 }

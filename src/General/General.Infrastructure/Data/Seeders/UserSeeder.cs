@@ -1,13 +1,13 @@
-﻿
-using General.Infrastructure.Security.Services;
-using General.Infrastructure.Security.Services.Infrastructure.Identity.Services;
-using global::General.Infrastructure.Security.Entities;
+﻿using global::General.Infrastructure.Security.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 namespace General.Infrastructure.Data.Seeders
 {
+    using global::General.Infrastructure.Security.Entities;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     public class UserSeeder
     {
         public static async Task SeedUsersAsync(IServiceProvider serviceProvider)
@@ -15,30 +15,31 @@ namespace General.Infrastructure.Data.Seeders
             using var scope = serviceProvider.CreateScope();
             var services = scope.ServiceProvider;
 
-            var userService = services.GetRequiredService<IdentityService>();
-            var roleService = services.GetRequiredService<RoleService>();
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<ApplicationRole>>();
             var logger = services.GetRequiredService<ILogger<UserSeeder>>();
 
             try
             {
-                // ۱. ایجاد رول ادمین اگر وجود ندارد
                 var adminRoleName = "Admin";
-                var adminRoleExists = await roleService..AnyAsync(r => r.Name == adminRoleName);
-                if (!adminRoleExists)
+                var adminEmail = "admin@example.com";
+
+                ApplicationRole role = new ApplicationRole()
                 {
-                    var adminRole = new ApplicationRole()
-                    {
-                        Name = "Admin",
-                        NormalizedName = "ADMIN",
-                        Description = "Admin Role With Full Permissions"
-                    };
-                    await roleManager.CreateAsync(adminRole);
-                    logger.LogInformation("Admin role created");
+                    Name = adminRoleName,
+                    Description="Admin Role with Full Permissions"
+
+                };
+
+
+                // ۱. ایجاد رول
+                if (!await roleManager.RoleExistsAsync(adminRoleName))
+                {
+                    await roleManager.CreateAsync(role);
+                    logger.LogInformation("✅ Admin role created");
                 }
 
-                // ۲. ایجاد کاربر ادمین اگر وجود ندارد
-                var adminEmail = "admin@example.com";
-                var adminPassword = "Admin123!";
+                // ۲. ایجاد کاربر
                 var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
                 if (adminUser == null)
@@ -51,36 +52,48 @@ namespace General.Infrastructure.Data.Seeders
                         PhoneNumberConfirmed = true,
                         FullName = "Admin",
                         CreateDateTime = DateTime.UtcNow,
-
+                        CreatorId = null,
+                        IsDeleted = false
                     };
 
-                    var result = await userManager.CreateAsync(adminUser, adminPassword);
+                    var result = await userManager.CreateAsync(adminUser, "Admin123!");
 
                     if (result.Succeeded)
                     {
-                        // ۳. اختصاص رول به کاربر
-                        await userManager.AddToRoleAsync(adminUser, adminRoleName);
+                        // 🔥 مهم: کاربر رو دوباره load کن تا Id پر بشه
+                        adminUser = await userManager.FindByEmailAsync(adminEmail);
 
-                        logger.LogInformation("Admin user created successfully");
-                        logger.LogInformation("Email: {Email}, Password: {Password}", adminEmail, "Admin123!");
-                    }
-                    else
-                    {
-                        logger.LogError("Failed to create admin user: {Errors}",
-                            string.Join(", ", result.Errors.Select(e => e.Description)));
+                        if (adminUser != null && adminUser.Id != null)
+                        {
+                            await userManager.AddToRoleAsync(adminUser, adminRoleName);
+                            logger.LogInformation("✅ Admin user created and role assigned");
+                        }
+                        else
+                        {
+                            logger.LogError("❌ User created but Id is null");
+                        }
                     }
                 }
                 else
                 {
-                    logger.LogInformation("Admin user already exists");
+                    // کاربر از قبل وجود داره
+                    if (!await userManager.IsInRoleAsync(adminUser, adminRoleName))
+                    {
+                        await userManager.AddToRoleAsync(adminUser, adminRoleName);
+                        logger.LogInformation("✅ Admin role assigned to existing user");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while seeding admin user");
+                logger.LogError(ex, "❌ Error in seeder");
                 throw;
             }
         }
     }
 }
+
+
+
+
 
