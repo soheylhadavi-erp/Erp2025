@@ -1,12 +1,10 @@
-﻿using General.Application.Auth.Permissions.Interfaces;
-using General.Application.Security.Users.Interfaces;
-using General.Infrastructure.Security.Entities;
+﻿using General.Application.Auth.Permissions;
+using General.Application.Auth.Users;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Infrastructure.Identity.Services
+namespace General.Infrastructure.Auth.Users
 {
     public class ClaimService : IClaimService
     {

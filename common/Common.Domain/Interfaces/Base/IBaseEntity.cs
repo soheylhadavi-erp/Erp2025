@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.Interfaces.Base
+﻿namespace Common.Domain
 {
     public interface IBaseEntity : ISoftDelete
     {

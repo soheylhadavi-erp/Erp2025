@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using General.Infrastructure.Auth.permissions;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace General.Infrastructure.Security.Entities
+namespace General.Infrastructure.Auth.Permissions
 {
     public class PermissionCategory
     {

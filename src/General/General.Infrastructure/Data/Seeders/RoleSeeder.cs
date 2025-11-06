@@ -1,8 +1,7 @@
-﻿using General.Infrastructure.Security.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace General.Infrastructure.Data.Seeders
+namespace General.Infrastructure.Auth.Roles
 {
     public class RoleSeeder
     {

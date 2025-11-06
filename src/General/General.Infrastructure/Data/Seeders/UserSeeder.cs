@@ -1,10 +1,7 @@
-﻿using global::General.Infrastructure.Security.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-namespace General.Infrastructure.Data.Seeders
+﻿namespace General.Infrastructure.Auth.Users
 {
-    using global::General.Infrastructure.Security.Entities;
+    using General.Infrastructure.Auth.Roles;
+    using General.Infrastructure.Security.Entities;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
@@ -27,7 +24,7 @@ namespace General.Infrastructure.Data.Seeders
                 ApplicationRole role = new ApplicationRole()
                 {
                     Name = adminRoleName,
-                    Description="Admin Role with Full Permissions"
+                    Description = "Admin Role with Full Permissions"
 
                 };
 

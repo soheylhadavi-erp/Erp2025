@@ -1,19 +1,16 @@
-﻿namespace General.Infrastructure.Security.Services
+﻿namespace General.Infrastructure.Auth.Roles
 {
-    using Common.Application.Models;
-    using General.Application.Auth.Permissions.Models;
-    using General.Application.Auth.Users.Models;
-    using General.Application.Security.Roles.Interfaces;
-    using General.Application.Security.Roles.Models;
-    using General.Application.Users;
-    using General.Infrastructure.Data;
-    using General.Infrastructure.Security.Entities;
+    using Common.Application;
+    using General.Application.Auth.Permissions;
+    using General.Application.Auth.Roles;
+    using General.Application.Auth.Users;
+    using General.Infrastructure;
+    using General.Infrastructure.Auth.Roles;
+    using General.Infrastructure.Auth.Users;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Logging;
 
-    namespace Infrastructure.Identity.Services
-    {
         public class RoleService : IRoleService
         {
             private readonly RoleManager<ApplicationRole> _roleManager;
@@ -41,14 +38,14 @@
                         return new OperationResultDto<RoleDto>()
                         {
                             Succeeded = false,
-                            Errors =new() { "Role name cannot be empty" }
+                            Errors = new() { "Role name cannot be empty" }
                         };
 
                     if (await _roleManager.RoleExistsAsync(request.Name))
                         return new OperationResultDto<RoleDto>()
                         {
                             Succeeded = false,
-                            Errors=new() { "Role name already exists" }
+                            Errors = new() { "Role name already exists" }
                         };
 
                     var role = new ApplicationRole
@@ -78,8 +75,8 @@
                     _logger.LogError(ex, "Error creating role {RoleName}", request.Name);
                     return new OperationResultDto<RoleDto>()
                     {
-                        Succeeded=false,
-                        Errors=new() { "Error creating role" }
+                        Succeeded = false,
+                        Errors = new() { "Error creating role" }
                     };
                 }
             }
@@ -116,8 +113,8 @@
                     _logger.LogInformation($"Role {RoleId} updated successfully", RoleId);
                     return new OperationResultDto()
                     {
-                        Succeeded=true,
-                        Message= "Role updated successfully"
+                        Succeeded = true,
+                        Message = "Role updated successfully"
                     };
                 }
                 catch (Exception ex)
@@ -125,8 +122,8 @@
                     _logger.LogError(ex, $"Error updating role {RoleId}", RoleId);
                     return new OperationResultDto()
                     {
-                        Succeeded=false,
-                        Errors=new() { "Error updating role" }
+                        Succeeded = false,
+                        Errors = new() { "Error updating role" }
                     };
                 }
             }
@@ -137,9 +134,9 @@
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return  new OperationResultDto()
+                        return new OperationResultDto()
                         {
-                            Succeeded=false,
+                            Succeeded = false,
                             Errors = new() { "Role not found" }
                         };
 
@@ -162,15 +159,15 @@
                     var result = await _roleManager.DeleteAsync(role);
                     if (!result.Succeeded)
                         return new OperationResultDto()
-                        { 
+                        {
                             Succeeded = false,
-                            Errors = result.Errors.Select(e => e.Description).ToList() 
+                            Errors = result.Errors.Select(e => e.Description).ToList()
                         };
                     _logger.LogInformation($"Role {RoleId} deleted successfully", RoleId);
                     return new OperationResultDto()
                     {
-                        Succeeded=true,
-                        Message= "Role deleted successfully"
+                        Succeeded = true,
+                        Message = "Role deleted successfully"
                     };
                 }
                 catch (Exception ex)
@@ -188,13 +185,13 @@
             {
                 return await _roleManager.Roles
                     .Where(r => r.Id == RoleId)
-                    .Include(x=>x.Permissions).ThenInclude(c=>c.Category)
+                    .Include(x => x.Permissions).ThenInclude(c => c.Category)
                     .Select(r => new RoleDto
                     {
                         Id = r.Id,
                         Name = r.Name,
                         Description = r.Description,
-                        Permissions=r.Permissions.Select(p=>new PermissionDto 
+                        Permissions = r.Permissions.Select(p => new PermissionDto
                         {
                             Id = p.Id,
                             Name = p.Name,
@@ -202,8 +199,8 @@
                             Category = p.Category.Name,
                             CategoryId = p.CategoryId,
                             IsDirect = false,
-                            IsAssigned=true
-                        }).ToList() 
+                            IsAssigned = true
+                        }).ToList()
                     })
                     .FirstOrDefaultAsync();
             }
@@ -266,17 +263,17 @@
                     Id = u.Id.ToString(),
                     Email = u.Email,
                     FullName = u.FullName,
-                    IsActive=u.IsActive,
+                    IsActive = u.IsActive,
                 }).ToList();
             }
 
-            public async Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId,Guid UserId)
+            public async Task<OperationResultDto> AddUserToRoleAsync(Guid RoleId, Guid UserId)
             {
                 try
                 {
                     var role = await _roleManager.FindByIdAsync(RoleId.ToString());
                     if (role == null)
-                        return new() {Succeeded=false,Errors=new() { "Role not found" } };
+                        return new() { Succeeded = false, Errors = new() { "Role not found" } };
 
                     var user = await _userManager.FindByIdAsync(UserId.ToString());
                     if (user == null)
@@ -343,7 +340,7 @@
                     if (!await _userManager.IsInRoleAsync(user, role.Name))
                         return new OperationResultDto()
                         {
-                            Succeeded=false,
+                            Succeeded = false,
                             Errors = new() { "User does not have this role" }
                         };
 
@@ -385,5 +382,4 @@
                    .AnyAsync();
             }
         }
-    }
 }

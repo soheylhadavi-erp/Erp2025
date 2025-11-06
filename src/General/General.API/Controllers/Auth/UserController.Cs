@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using General.Application.Auth.Users.Commands.LoginUser;
-using General.Application.Auth.Users.Commands.RegisterUser;
+using General.Application.Auth.Users;
 //using General.Application.Features.Auth.Queries.GetUserProfile;
 
 namespace General.API.Controllers

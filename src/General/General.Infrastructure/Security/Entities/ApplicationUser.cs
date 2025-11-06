@@ -1,7 +1,8 @@
-using Common.Domain.Interfaces.Base;
+using Common.Domain;
+using General.Infrastructure.Auth.permissions;
 using Microsoft.AspNetCore.Identity;
 
-namespace General.Infrastructure.Security.Entities;
+namespace General.Infrastructure.Auth.Users;
 
 public class ApplicationUser : IdentityUser<Guid>, IAudit, ISoftDelete
 {

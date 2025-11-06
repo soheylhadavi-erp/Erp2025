@@ -1,11 +1,10 @@
-﻿using General.Infrastructure.Data;
-using General.Infrastructure.Security.Entities;
+﻿using General.Application.Auth.Permissions;
+using General.Infrastructure.Auth.Roles;
+using General.Infrastructure.Auth.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using General.Application.Auth.Permissions.Interfaces;
-using General.Application.Auth.Permissions.Models;
-namespace General.Infrastructure.Security.Services
+namespace General.Infrastructure.Auth.Permissions
 {
     public class PermissionService : IPermissionService
     {
@@ -40,9 +39,9 @@ namespace General.Infrastructure.Security.Services
                 //    .AnyAsync(up => up.UserId == userId && up.Permission.Name == permissionName);
 
                 var hasDirectPermission = await _context.Users
-                    .Where(u=>u.Id==userId)
+                    .Where(u => u.Id == userId)
                    .SelectMany(u => u.Permissions)
-                   .AnyAsync(p => p.Name ==permissionName);
+                   .AnyAsync(p => p.Name == permissionName);
 
                 if (hasDirectPermission) return true;
 
@@ -55,7 +54,7 @@ namespace General.Infrastructure.Security.Services
                 //    .AnyAsync(rp => userRoles.Contains(rp.Role.Name) && rp.Permission.Name == permissionName);
 
                 var hasRolePermission = await _context.Roles
-                   .Where(r=>userRoles.Contains(r.Name))
+                   .Where(r => userRoles.Contains(r.Name))
                    .SelectMany(r => r.Permissions)
                    .AnyAsync(p => p.Name == permissionName);
 
@@ -171,7 +170,7 @@ namespace General.Infrastructure.Security.Services
 
                 var existingPermission = await _context.Users
                     .Where(u => u.Id == userId)
-                    .SelectMany(u=>u.Permissions)
+                    .SelectMany(u => u.Permissions)
                     .FirstOrDefaultAsync(up => up.Id == permissionId);
 
 
@@ -207,9 +206,9 @@ namespace General.Infrastructure.Security.Services
                 //    .FirstOrDefaultAsync(up => up.UserId == userId && up.PermissionId == permissionId);
 
                 var permission = await _context.Users
-                    .Where(u=>u.Id==userId)
-                    .SelectMany(u=>u.Permissions)
-                    .FirstOrDefaultAsync(p=>p.Id == permissionId);
+                    .Where(u => u.Id == userId)
+                    .SelectMany(u => u.Permissions)
+                    .FirstOrDefaultAsync(p => p.Id == permissionId);
 
                 if (permission == null)
                     return AssignPermissionResult.Failure("Permission not assigned to user");
@@ -217,7 +216,7 @@ namespace General.Infrastructure.Security.Services
                 //_context.UserPermissions.Remove(userPermission);
                 var user = await _context.Users.Where(x => x.Id == userId).FirstOrDefaultAsync();
                 user.Permissions.Remove(permission);
-                
+
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("Permission {PermissionId} removed from user {UserId}", permissionId, userId);
@@ -238,9 +237,9 @@ namespace General.Infrastructure.Security.Services
             //    .Include(rp => rp.Permission)
             //    .AnyAsync(rp => rp.RoleId == roleId && rp.Permission.Name == permissionName);
             return await _context.Roles
-                .Where(r=>r.Id==roleId)
-                .SelectMany(r=>r.Permissions)
-                .AnyAsync(p =>p.Name == permissionName);
+                .Where(r => r.Id == roleId)
+                .SelectMany(r => r.Permissions)
+                .AnyAsync(p => p.Name == permissionName);
         }
 
         public async Task<List<PermissionDto>> GetRolePermissionsAsync(Guid roleId)
@@ -260,7 +259,7 @@ namespace General.Infrastructure.Security.Services
             //    .ToListAsync();
             return await _context.Roles
                 .Where(r => r.Id == roleId)
-                .SelectMany(r=>r.Permissions)
+                .SelectMany(r => r.Permissions)
                 .Include(p => p.Category)
                 .Select(p => new PermissionDto
                 {
@@ -286,7 +285,7 @@ namespace General.Infrastructure.Security.Services
                     return AssignPermissionResult.Failure("Permission not found");
 
                 var hasPermission = await _context.Roles.Include(x => x.Permissions).
-                    Where(x => x.Id == roleId).SelectMany(x => x.Permissions).AnyAsync(p=>p.Id==permissionId);
+                    Where(x => x.Id == roleId).SelectMany(x => x.Permissions).AnyAsync(p => p.Id == permissionId);
 
                 if (hasPermission)
                     return AssignPermissionResult.Failure("Permission already assigned to role");
@@ -307,7 +306,7 @@ namespace General.Infrastructure.Security.Services
         {
             try
             {
-                var role = await _context.Roles.Include(x=>x.Permissions).Where(x=>x.Id==roleId).FirstOrDefaultAsync();
+                var role = await _context.Roles.Include(x => x.Permissions).Where(x => x.Id == roleId).FirstOrDefaultAsync();
                 if (role == null)
                     return AssignPermissionResult.Failure("Role not found");
 
@@ -331,7 +330,7 @@ namespace General.Infrastructure.Security.Services
 
                 var currentPermissions = await _context.Roles
                    .Where(r => r.Id == roleId)
-                   .SelectMany(r=>r.Permissions)
+                   .SelectMany(r => r.Permissions)
                    .ToListAsync();
 
                 role.Permissions.RemoveAll(currentPermissions);
@@ -347,7 +346,7 @@ namespace General.Infrastructure.Security.Services
                 //}
                 foreach (var permissionId in permissionIds)
                 {
-                    var permission =await _context.SystemPermissions.FindAsync(permissionId);
+                    var permission = await _context.SystemPermissions.FindAsync(permissionId);
                     role.Permissions.Add(permission);
                 }
 
@@ -372,7 +371,7 @@ namespace General.Infrastructure.Security.Services
 
                 var role = await _context.Roles.Include(x => x.Permissions).Where(x => x.Id == roleId).FirstOrDefaultAsync();
 
-                var rolePermission =role.Permissions.Where(p => p.Id == permissionId).FirstOrDefault();
+                var rolePermission = role.Permissions.Where(p => p.Id == permissionId).FirstOrDefault();
 
 
                 if (rolePermission == null)
@@ -490,13 +489,13 @@ namespace General.Infrastructure.Security.Services
             if (ReferenceEquals(x, y)) return true;
             if (x is null || y is null) return false;
 
-            return x.Id == y.Id; 
+            return x.Id == y.Id;
         }
 
         public int GetHashCode(PermissionDto obj)
         {
             if (obj is null) return 0;
-            return obj.Id.GetHashCode(); 
+            return obj.Id.GetHashCode();
         }
     }
 }

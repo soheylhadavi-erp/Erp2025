@@ -1,9 +1,8 @@
-﻿using Common.Contract.Responses;
+﻿using Common.Contract;
+using General.Application.Auth.Roles;
 using General.Application.Security.Roles;
-using General.Application.Security.Roles.Commands.CreateRole;
-using General.Application.Security.Roles.Commands.DeleteRole;
+using General.Contract.Auth.Users;
 using General.Contract.Roles;
-using General.Contract.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +35,7 @@ namespace General.Api.Controllers
         /// دریافت نقش بر اساس شناسه
         /// </summary>
         [HttpGet("get-role-by-id")]
-        public async Task<ActionResult<ApiResponse<RoleResponse>>> GetRoleById([FromQuery]GetRoleByIdQuey query)
+        public async Task<ActionResult<ApiResponse<RoleResponse>>> GetRoleById([FromQuery] GetRoleByIdQuey query)
         {
             var result = await _mediator.Send(query);
 
@@ -71,7 +70,7 @@ namespace General.Api.Controllers
         /// حذف نقش
         /// </summary>
         [HttpPost("delete")]
-        public async Task<ActionResult<ApiResponse>> DeleteRole([FromBody]DeleteRoleCommand command)
+        public async Task<ActionResult<ApiResponse>> DeleteRole([FromBody] DeleteRoleCommand command)
         {
             var result = await _mediator.Send(command);
 
@@ -82,9 +81,9 @@ namespace General.Api.Controllers
         /// افزودن کاربر به نقش
         /// </summary>
         [HttpPost("add-user-to-role")]
-        public async Task<ActionResult<ApiResponse>> AddUserToRole(Guid roleId, Guid userId)
+        public async Task<ActionResult<ApiResponse>> AddUserToRole([FromBody] AddUserToRoleCommand request)
         {
-            var command = new AddUserToRoleCommand { RoleId = roleId, UserId = userId };
+            var command = new AddUserToRoleCommand { RoleId = request.RoleId, UserId = request.UserId };
             var result = await _mediator.Send(command);
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
@@ -94,7 +93,7 @@ namespace General.Api.Controllers
         /// حذف کاربر از نقش
         /// </summary>
         [HttpPost("remove-user-from-role")]
-        public async Task<ActionResult<ApiResponse>> RemoveUserFromRole([FromBody]RemoveUserFromRoleCommand command)
+        public async Task<ActionResult<ApiResponse>> RemoveUserFromRole([FromBody] RemoveUserFromRoleCommand command)
         {
             var result = await _mediator.Send(command);
             return result.Succeeded ? Ok(result) : BadRequest(result);
@@ -104,7 +103,7 @@ namespace General.Api.Controllers
         /// دریافت کاربران یک نقش
         /// </summary>
         [HttpGet("get-users-in-role")]
-        public async Task<ActionResult<ApiResponse<List<UserResponse>>>> GetUsersInRole([FromQuery]GetUsersInRoleQuery query)
+        public async Task<ActionResult<ApiResponse<List<UserResponse>>>> GetUsersInRole([FromQuery] GetUsersInRoleQuery query)
         {
             var result = await _mediator.Send(query);
             return Ok(result);

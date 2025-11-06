@@ -1,11 +1,14 @@
-﻿using System;
+﻿using General.Infrastructure.Auth.Permissions;
+using General.Infrastructure.Auth.Roles;
+using General.Infrastructure.Auth.Users;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace General.Infrastructure.Security.Entities
+namespace General.Infrastructure.Auth.permissions
 {
     public class SystemPermission
     {

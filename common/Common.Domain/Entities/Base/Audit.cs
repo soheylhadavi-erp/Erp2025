@@ -1,6 +1,4 @@
-﻿using Common.Domain.Interfaces.Base;
-
-namespace Common.Domain.Entities.Base
+﻿namespace Common.Domain
 {
     internal class Audit : IAudit
     {
@@ -9,8 +7,8 @@ namespace Common.Domain.Entities.Base
         public DateTime CreateDateTime { get; set; }
         public DateTime? ModifyDateTime { get; set; }
         public Guid? DeletedById { get; set; }
-        public DateTime? DeleteDateTime{ get; set; }
-        public string ConcurrencyStamp { get; set; }= Guid.NewGuid().ToString();
+        public DateTime? DeleteDateTime { get; set; }
+        public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
         public Guid? TenantId { get; set; }
     }
 }

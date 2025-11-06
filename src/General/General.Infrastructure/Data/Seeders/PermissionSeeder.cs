@@ -1,8 +1,7 @@
-﻿using General.Infrastructure.Data;
-using General.Infrastructure.Security.Entities;
+﻿using General.Infrastructure.Auth.permissions;
 using Microsoft.EntityFrameworkCore;
 
-namespace General.Infrastructure.Data.Seeders
+namespace General.Infrastructure.Auth.Permissions
 {
     public class PermissionSeeder
     {

@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
-using Common.Application.Models;
-using Common.Contract.Responses;
-using General.Application.Auth.Permissions.Models;
-using General.Application.Auth.Users.Models;
-using General.Application.Security.Roles.Models;
-using General.Contract.Permissions;
+using Common.Application;
+using Common.Contract;
+using General.Application.Auth.Permissions;
+using General.Contract.Auth.Permissions;
 using General.Contract.Roles;
 
-namespace General.Application.Security.Roles
+namespace General.Application.Auth.Roles
 {
     public class Profiler : Profile
     {

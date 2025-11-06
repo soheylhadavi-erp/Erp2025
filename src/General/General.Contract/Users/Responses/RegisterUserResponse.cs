@@ -1,4 +1,4 @@
-namespace General.Contract.Users
+namespace General.Contract.Auth.Users
 {
     public class RegisterUserResponse
     {

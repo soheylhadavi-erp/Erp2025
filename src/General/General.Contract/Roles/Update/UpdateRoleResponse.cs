@@ -1,4 +1,4 @@
-﻿namespace General.Contract.Roles.Update
+﻿namespace General.Contract.Roles
 {
     public class UpdateRoleResponse
     {

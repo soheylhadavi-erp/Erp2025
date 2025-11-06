@@ -1,4 +1,4 @@
-﻿using Common.Application.Utilities;
+﻿using Common.Application;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 namespace Common.Infrastructure.Middlewares

@@ -1,4 +1,4 @@
-﻿namespace Common.Contract.Responses
+﻿namespace Common.Contract
 {
     public class ApiResponse
     {

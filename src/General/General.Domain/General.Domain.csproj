@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Entities\Base\" />
     <Folder Include="Entities\Shared\Enums\" />
     <Folder Include="Entities\Shared\ValueObjects\" />
   </ItemGroup>

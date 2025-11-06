@@ -1,4 +1,4 @@
-﻿namespace Common.Application.Utilities
+﻿namespace Common.Application
 {
     public static class CurrentUser
     {

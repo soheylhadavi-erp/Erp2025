@@ -1,20 +1,17 @@
-﻿using General.Application.Auth.Permissions.Interfaces;
-using General.Application.Auth.Users.Commands.LoginUser;
-using General.Application.Auth.Users.Interfaces;
-using General.Application.Security.Roles;
-using General.Application.Security.Roles.Interfaces;
-using General.Application.Security.Users.Interfaces;
-using General.Infrastructure.Data;
-using General.Infrastructure.Security.Entities;
-using General.Infrastructure.Security.Services;
-using General.Infrastructure.Security.Services.Infrastructure.Identity.Services;
-using Infrastructure.Identity.Services;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Common.Infrastructure.Middlewares;
+using General.Application.Auth.Users;
+using General.Infrastructure.Auth;
+using General.Infrastructure;
+using General.Infrastructure.Auth.Users;
+using General.Application.Auth.Permissions;
+using General.Infrastructure.Auth.Permissions;
+using General.Application.Auth.Roles;
+using General.Infrastructure.Auth.Roles;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -82,10 +79,10 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<JwtService>();
-builder.Services.AddScoped<IdentityService>();
+//builder.Services.AddScoped<IdentityService>();
 builder.Services.AddScoped<IClaimService, ClaimService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
-builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 
 

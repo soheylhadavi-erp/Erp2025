@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace General.Contract.Users
+﻿namespace General.Contract.Auth.Users
 {
     public class UserResponse
     {

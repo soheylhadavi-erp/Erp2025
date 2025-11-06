@@ -1,19 +1,21 @@
-﻿using General.Infrastructure.Data;
-using General.Infrastructure.Data.Seeders;
-using Microsoft.EntityFrameworkCore;
+﻿using General.Infrastructure.Auth.Permissions;
+using General.Infrastructure.Auth.Roles;
+using General.Infrastructure.Auth.Users;
 using Microsoft.Extensions.Logging;
-
-public static class AppSeeder
+namespace General.Infrastructure
 {
-    public static async Task SeedAsync(AppDbContext context,IServiceProvider serviceProvider,ILoggerFactory loggerFactory)
+    public static class AppSeeder
     {
-        //if (!await context.SystemPermissions.AnyAsync())
-        //{
+        public static async Task SeedAsync(AppDbContext context, IServiceProvider serviceProvider, ILoggerFactory loggerFactory)
+        {
+            //if (!await context.SystemPermissions.AnyAsync())
+            //{
             await PermissionCategorySeeder.SeedPermissionCategoriesAsync(context);
             await PermissionSeeder.SeedPermissionsAsync(context);
             await new RoleSeeder(context, loggerFactory).SeedRolesAsync();
             await UserSeeder.SeedUsersAsync(serviceProvider);
 
-        //}
+            //}
+        }
     }
 }

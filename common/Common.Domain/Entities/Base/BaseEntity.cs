@@ -1,6 +1,4 @@
-﻿using Common.Domain.Interfaces.Base;
-
-namespace Common.Domain.Entities.Base
+﻿namespace Common.Domain
 {
     public class BaseEntity : IBaseEntity
     {

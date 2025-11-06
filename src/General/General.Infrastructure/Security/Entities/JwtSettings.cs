@@ -1,4 +1,4 @@
-namespace General.Infrastructure.Security.Entities;
+namespace General.Infrastructure.Auth;
 
 public class JwtSettings
 {

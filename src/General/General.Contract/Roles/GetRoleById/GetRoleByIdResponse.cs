@@ -1,4 +1,4 @@
-﻿using General.Contract.Permissions;
+﻿using General.Contract.Auth.Permissions;
 
 namespace General.Contract.Roles
 {

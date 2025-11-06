@@ -1,4 +1,4 @@
-﻿namespace Common.Application.Models
+﻿namespace Common.Application
 {
     public class PaginatedResultDto<T>
     {
@@ -17,4 +17,5 @@
         public int DisplayedCount => Items.Count;
         public int RemainingRecords => Math.Max(TotalCount - SkippedRecords - (PageNumber * PageSize), 0);
     }
+
 }

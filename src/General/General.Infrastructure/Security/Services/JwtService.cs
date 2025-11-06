@@ -1,20 +1,18 @@
-using General.Application.Security.Users.Interfaces;
-using General.Infrastructure.Security.Entities;
+using General.Application.Auth.Users;
+using General.Infrastructure.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace General.Infrastructure.Security.Services;
+namespace General.Infrastructure.Auth;
 
 public class JwtService
 {
     private readonly JwtSettings _settings;
     private readonly IClaimService _claimService;
 
-    public JwtService(IOptions<JwtSettings> settings,IClaimService claimService)
+    public JwtService(IOptions<JwtSettings> settings, IClaimService claimService)
     {
         _settings = settings.Value;
         _claimService = claimService;

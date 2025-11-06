@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using General.Infrastructure.Auth.permissions;
+using General.Infrastructure.Auth.Users;
 
-namespace General.Infrastructure.Security.Entities
+namespace General.Infrastructure.Auth.Permissions
 {
     public class UserPermission
     {
