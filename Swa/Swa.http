@@ -1,0 +1,6 @@
+@Swa_HostAddress = http://localhost:5216
+
+GET {{Swa_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

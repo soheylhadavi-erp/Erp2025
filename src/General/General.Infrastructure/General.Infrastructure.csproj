@@ -15,7 +15,6 @@
 	<ItemGroup>
     <ProjectReference Include="..\General.Application\General.Application.csproj" />
     <ProjectReference Include="..\General.Domain\General.Domain.csproj" />
-    <ProjectReference Include="..\General.contract\General.Contract.csproj" />
   </ItemGroup>
 
   <ItemGroup>
