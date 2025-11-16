@@ -55,17 +55,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// اضافه کردن CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSwaggerAggregator", policy =>
-    {
-        policy.WithOrigins("https://localhost:7052") // آدرس SwaggerAggregator و سایر API ها
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(LoginUserCommand).Assembly)); // پروژه Application
 //builder.Services.AddAutoMapper(typeof(RegisterUserCommand).Assembly);
@@ -138,8 +127,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// استفاده از CORS 
-app.UseCors("AllowSwaggerAggregator");
 
 app.UseHttpsRedirection();
 

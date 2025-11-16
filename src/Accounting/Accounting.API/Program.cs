@@ -7,17 +7,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// اضافه کردن CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSwaggerAggregator", policy =>
-    {
-        policy.WithOrigins("https://localhost:7220") // آدرس SwaggerAggregator و سایر API ها
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,9 +15,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-// استفاده از CORS 
-app.UseCors("AllowSwaggerAggregator");
 
 app.UseHttpsRedirection();
 
