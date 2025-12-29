@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+	  <PackageId>ERP.SharedKernel</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>YourName</Authors>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Erp.Sharedkernel\Erp.Sharedkernel.csproj" />
+    <Folder Include="Events\" />
   </ItemGroup>
 
 </Project>
